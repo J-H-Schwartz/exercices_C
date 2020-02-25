@@ -33,12 +33,7 @@
 double distance_calc(double x1, double y1, double x2, double y2){
 	double length = x2-x1;
 	double width = y2-y1;
-	if (length < 0){
-		length = -length;
-	}
-	if (width < 0){
-		width = -width;
-	}
+
 	double sides = (length*length)+(width*width);
 	double result = sqrt(sides);
 	return result;
