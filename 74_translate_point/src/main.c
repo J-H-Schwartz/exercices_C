@@ -30,24 +30,40 @@
 #include<stdio.h>
 #include<math.h>
 
-double distance_calc(double x1, double y1, double x2, double y2){
-	double length = x2-x1;
-	double width = y2-y1;
-	double sides = (length*length)+(width*width);
-	double result = sqrt(sides);
-	return result;
+typedef struct {
+	double x;
+	double y;
+} point;
+
+point translate_point(point point_1,double delta_x, double delta_y){
+	point_1.x += delta_x;
+	point_1.y += delta_y;
+	return point_1;
+}
+
+void translate(point *point, double delta_x, double delta_y){
+	(*point).x += delta_x;
+	(*point).y += delta_y;
 }
 
 int main(void){
-	double x1;
-	double y1;
-	double x2;
-	double y2;
-	double result;
-	printf("Entrez les coordonnées des 2 points suivant le format: x1 y1 x2 y2 : ");
-	scanf("%lf %lf %lf %lf", &x1, &y1, &x2, &y2);
-	result = distance_calc(x1,y1,x2,y2);
-	printf("%10.2lf", result);
+	point point_1;
+	point point_2;
+	point_1.x = 1;
+	point_1.y = 1;
+	point_2.x = 3;
+	point_2.y = 3;
+	double delta_x;
+	double delta_y;
+	point result;
+	printf("Entrez les déplacements (delta_x et delta_y) : ");
+	scanf("%lf %lf", &delta_x, &delta_y);
+	result = translate_point(point_1, delta_x, delta_y);
+	printf("Point 1 : %10.2lf %10.2lf\n", point_1.x, point_1.y);
+	printf("Nouveau point créé à partir du premier : %10.2lf %10.2lf\n", result.x, result.y);
+	printf("Point 2 avant translation : %10.2lf %10.2lf\n", point_2.x, point_2.y);
+	translate(&point_2, delta_x, delta_y);
+	printf("Point 2 après translation :%10.2lf %10.2lf\n", point_2.x, point_2.y);
 	return 0;
 }
 

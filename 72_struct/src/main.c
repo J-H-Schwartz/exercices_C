@@ -28,26 +28,17 @@
 */
 
 #include<stdio.h>
-#include<math.h>
 
-double distance_calc(double x1, double y1, double x2, double y2){
-	double length = x2-x1;
-	double width = y2-y1;
-	double sides = (length*length)+(width*width);
-	double result = sqrt(sides);
-	return result;
-}
+typedef struct {
+	char *name;
+	int age;
+} person;
 
 int main(void){
-	double x1;
-	double y1;
-	double x2;
-	double y2;
-	double result;
-	printf("Entrez les coordonnées des 2 points suivant le format: x1 y1 x2 y2 : ");
-	scanf("%lf %lf %lf %lf", &x1, &y1, &x2, &y2);
-	result = distance_calc(x1,y1,x2,y2);
-	printf("%10.2lf", result);
+	person bob;
+	bob.name = "Bob";
+	bob.age = 18;
+	printf("%s %d", bob.name, bob.age);
 	return 0;
 }
 
