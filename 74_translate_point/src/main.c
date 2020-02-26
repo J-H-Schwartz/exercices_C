@@ -32,18 +32,21 @@
 
 typedef struct {
 	double x;
+	char blabla[1024];
 	double y;
 } point;
 
-point translate_point(point point_1,double delta_x, double delta_y){
-	point_1.x += delta_x;
-	point_1.y += delta_y;
-	return point_1;
+point translate_point(point point,double delta_x, double delta_y){
+	printf("translate point= %p\n", &point);
+	point.x += delta_x;
+	point.y += delta_y;
+	return point;
 }
 
-void translate(point *point, double delta_x, double delta_y){
-	(*point).x += delta_x;
-	(*point).y += delta_y;
+void translate(point *point_ptr, double delta_x, double delta_y){
+	printf("translate point= %p\n", point_ptr);
+	(*point_ptr).x += delta_x;
+	(*point_ptr).y += delta_y;
 }
 
 int main(void){
@@ -58,7 +61,9 @@ int main(void){
 	point result;
 	printf("Entrez les déplacements (delta_x et delta_y) : ");
 	scanf("%lf %lf", &delta_x, &delta_y);
+	printf("Avant translate point= %p\n", &point_1);
 	result = translate_point(point_1, delta_x, delta_y);
+	printf("After translate point= %p\n", &result);
 	printf("Point 1 : %10.2lf %10.2lf\n", point_1.x, point_1.y);
 	printf("Nouveau point créé à partir du premier : %10.2lf %10.2lf\n", result.x, result.y);
 	printf("Point 2 avant translation : %10.2lf %10.2lf\n", point_2.x, point_2.y);

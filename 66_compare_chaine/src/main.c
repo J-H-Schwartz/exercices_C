@@ -28,7 +28,7 @@
 */
 
 #include<stdio.h>
-#include<compare.h>
+#include "compare.h"
 
 int main(void){
 	int result;

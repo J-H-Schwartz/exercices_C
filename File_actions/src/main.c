@@ -32,7 +32,7 @@
 
 int main(void){
 
-	FILE *example_file = fopen("/home/jonathan/Desktop/Repositories/File_actions/Debug/example_file.txt", "r");
+	FILE *example_file = fopen("/home/jonathan/Desktop/Repositories/exercices_C/File_actions/Debug/example_file.txt", "r");
 	if (example_file == NULL)
 		{
 			printf("Can't open file.");
@@ -41,7 +41,6 @@ int main(void){
 	char vowels []= "AEIOUYaeiouy¬‚¿‡…È»Ë ÍŒÓ‘Ù÷ˆ€˚‹¸Ÿ˘";
 	char consonants []= "ZzRrTtPpQqSsDdFfGgHhJjKkLlMmWwXxCcVvBbNn";
 	int text_char_count = 0;
-	int vowels_length = strlen(vowels);
 	int consonants_length = strlen(consonants);
 	int text_vowels = 0;
 	int text_consonants = 0;
@@ -52,7 +51,7 @@ int main(void){
 		{
 			is_vowel = 0;
 			is_consonant = 0;
-			for (int i = 0; (i < vowels_length) && !is_vowel; i++)
+			for (int i = 0; (vowels[i] != '\0') && !is_vowel; i++)
 				{
 					if (ch == vowels[i])
 					{
