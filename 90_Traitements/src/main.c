@@ -41,13 +41,11 @@
 #define BLACK 6
 
 
-typedef struct {			/*Définition du nouveau type led qui contient les valeurs des couleurs*/
-	int RValue;				/*Rouge, Verte, et Bleue et qui est une struct.						  */
+typedef struct { /*Définition du nouveau type led qui contient les valeurs des couleurs*/
+	int RValue; /*Rouge, Verte, et Bleue et qui est une struct.						  */
 	int GValue;
 	int BValue;
 } led;
-
-
 
 /************************************************************************************************/
 /*								Initialisation de la matrice.									*/
@@ -98,14 +96,14 @@ COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
 COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
 COLOR_OFF, COLOR_OFF,
 COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
-static led *matrice[7] = { line_1, line_2, line_3, line_4, line_5, line_6, line_7 };
+static led *matrice[7] = { line_1, line_2, line_3, line_4, line_5, line_6,
+		line_7 };
 
-static led colors[7] = { { COLOR_ON, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_ON,
+static led colors[7] = { { COLOR_ON, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_ON,
 COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_ON }, { COLOR_ON,
 COLOR_ON, COLOR_ON }, { COLOR_ON, COLOR_OFF, COLOR_ON }, { COLOR_ON,
-COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
-
-
+COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }};
 
 /************************************************************************************************/
 /*									SetLedNewColor												*/
@@ -124,8 +122,6 @@ void SetLedNewColor(led leds_table[], int led_num, led new_led_color) {
 	leds_table[led_num].GValue = new_led_color.GValue;
 	leds_table[led_num].BValue = new_led_color.BValue;
 }
-
-
 
 /************************************************************************************************/
 /*									SetLedMatrice												*/
@@ -148,8 +144,6 @@ void SetLedMatrice(led *leds_table[], int Tabsize) {
 	}
 }
 
-
-
 /************************************************************************************************/
 /*									print_colored_square										*/
 /*	But:																						*/
@@ -160,18 +154,20 @@ void SetLedMatrice(led *leds_table[], int Tabsize) {
 /*																								*/
 /************************************************************************************************/
 
-void print_colored_square(led *matrice[]){
+void Set_colored_square(led *matrice[]) {
 	for (int row = 0; row < 7; row++) {
 		for (int col = 0; col < 7; col++) {
-			if (row == 3 && col == 3)SetLedNewColor(matrice[row], col, colors[YELLOW]);
-			else if ( (row >= 2 && row <= 4) && (col >= 2 && col <= 4)) SetLedNewColor(matrice[row], col, colors[GREEN]);
-			else if ( (row >= 1 && col >= 1) && (row <= 5 && col <= 5)) SetLedNewColor(matrice[row], col, colors[BLACK]);
-			else SetLedNewColor(matrice[row], col, colors[RED]);
+			if (row == 3 && col == 3)
+				SetLedNewColor(matrice[row], col, colors[YELLOW]);
+			else if ((row >= 2 && row <= 4) && (col >= 2 && col <= 4))
+				SetLedNewColor(matrice[row], col, colors[GREEN]);
+			else if ((row >= 1 && col >= 1) && (row <= 5 && col <= 5))
+				SetLedNewColor(matrice[row], col, colors[BLACK]);
+			else
+				SetLedNewColor(matrice[row], col, colors[RED]);
 		}
 	}
 }
-
-
 
 /************************************************************************************************/
 /*									Setnumber													*/
@@ -190,8 +186,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	if (number == 1) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 4) || (row == 1 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 1*/
-						|| (row == 1 && col == 4) || (row == 2 && col == 2)
+				if ((row == 0 && col == 4) || (row == 1 && col == 3) /*Ensemble de conditions pour afficher le chiffre 1*/
+				|| (row == 1 && col == 4) || (row == 2 && col == 2)
 						|| (row == 2 && col == 4) || (row == 3 && col == 1)
 						|| (row == 3 && col == 4) || (row == 4 && col == 4)
 						|| (row == 5 && col == 4) || (row == 6 && col == 4)) {
@@ -208,8 +204,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 2) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 2) || (row == 0 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 2*/
-						|| (row == 0 && col == 4) || (row == 1 && col == 1)
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 2*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
 						|| (row == 1 && col == 5) || (row == 2 && col == 5)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 4 && col == 1)
@@ -229,8 +225,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 3) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 2) || (row == 0 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 3*/
-						|| (row == 0 && col == 4) || (row == 1 && col == 1)
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 3*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
 						|| (row == 1 && col == 5) || (row == 2 && col == 5)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 4 && col == 5)
@@ -250,8 +246,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 4) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 4) || (row == 1 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 4*/
-						|| (row == 1 && col == 4) || (row == 2 && col == 2)
+				if ((row == 0 && col == 4) || (row == 1 && col == 3) /*Ensemble de conditions pour afficher le chiffre 4*/
+				|| (row == 1 && col == 4) || (row == 2 && col == 2)
 						|| (row == 2 && col == 4) || (row == 3 && col == 1)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 3 && col == 5)
@@ -270,8 +266,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 5) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 1) || (row == 0 && col == 2)		/*Ensemble de conditions pour afficher le chiffre 5*/
-						|| (row == 0 && col == 3) || (row == 0 && col == 4)
+				if ((row == 0 && col == 1) || (row == 0 && col == 2) /*Ensemble de conditions pour afficher le chiffre 5*/
+				|| (row == 0 && col == 3) || (row == 0 && col == 4)
 						|| (row == 0 && col == 5) || (row == 1 && col == 1)
 						|| (row == 2 && col == 1) || (row == 3 && col == 1)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
@@ -292,8 +288,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 6) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 2) || (row == 0 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 6*/
-						|| (row == 0 && col == 4) || (row == 1 && col == 1)
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 6*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
 						|| (row == 2 && col == 1) || (row == 3 && col == 1)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 4 && col == 1)
@@ -314,8 +310,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 7) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 1) || (row == 0 && col == 2)		/*Ensemble de conditions pour afficher le chiffre 7*/
-						|| (row == 0 && col == 3) || (row == 0 && col == 4)
+				if ((row == 0 && col == 1) || (row == 0 && col == 2) /*Ensemble de conditions pour afficher le chiffre 7*/
+				|| (row == 0 && col == 3) || (row == 0 && col == 4)
 						|| (row == 0 && col == 5) || (row == 1 && col == 5)
 						|| (row == 2 && col == 5) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 3 && col == 5)
@@ -334,8 +330,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 8) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 2) || (row == 0 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 8*/
-						|| (row == 0 && col == 4) || (row == 1 && col == 1)
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 8*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
 						|| (row == 2 && col == 1) || (row == 2 && col == 5)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 4 && col == 1)
@@ -356,8 +352,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 9) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 2) || (row == 0 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 9*/
-						|| (row == 0 && col == 4) || (row== 1 && col == 1)
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 9*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
 						|| (row == 2 && col == 1) || (row == 2 && col == 5)
 						|| (row == 3 && col == 2) || (row == 3 && col == 3)
 						|| (row == 3 && col == 4) || (row == 3 && col == 5)
@@ -378,8 +374,8 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	} else if (number == 0) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 2) || (row == 0 && col == 3)		/*Ensemble de conditions pour afficher le chiffre 0*/
-						|| (row == 0 && col == 4) || (row == 1 && col == 1)
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 0*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
 						|| (row == 2 && col == 1) || (row == 2 && col == 5)
 						|| (row == 3 && col == 5) || (row == 4 && col == 1)
 						|| (row == 4 && col == 5) || (row == 5 && col == 1)
@@ -399,22 +395,121 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	}
 }
 
-int main(void) {
-	int up = 0;
-	int down = 3;
-	for (int number = 9; number >= 0; number--){			/*Boucle de décompte de 9 à 0*/
-		Setnumber(matrice, number, colors[up], colors[down]);
+
+
+/************************************************************************************************/
+/*									SetFlashingSmiley											*/
+/*	But:																						*/
+/*		Fonction qui fait clignoter un smiley avec les couleurs choisies pendant le temps voulu.*/
+/*																								*/
+/* 	Interface:																					*/
+/* 		*matrice[] qui est un tableau de tableaux de structures de type led (struct).			*/
+/*		smiley_color1 qui est la couleur à appliquer au smiley, de type led (struct) en cycle 1.*/
+/*		smiley_color2 qui est la couleur à appliquer au fond, de type led (struct) en cycle 2.	*/
+/*		timer qui est le nombre de flashs avant arrêt de type integer.							*/
+/*																								*/
+/************************************************************************************************/
+
+void SetFlashingSmiley(led *matrice[], led smiley_color1, led smiley_color2,
+		int timer) {
+	while (timer > 0) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 0 && col == 1) || (row == 0 && col == 2)	/*Conditions pour remplissage du smiley cycle 1*/
+						|| (row == 0 && col == 3) || (row == 0 && col == 4)
+						|| (row == 0 && col == 0) || (row == 0 && col == 6)
+						|| (row == 0 && col == 5) || (row == 1 && col == 0)
+						|| (row == 1 && col == 2) || (row == 1 && col == 3)
+						|| (row == 1 && col == 4) || (row == 1 && col == 6)
+						|| (row == 2 && col == 0) || (row == 2 && col == 3)
+						|| (row == 2 && col == 6) || (row == 3 && col == 0)
+						|| (row == 3 && col == 1) || (row == 3 && col == 2)
+						|| (row == 3 && col == 3) || (row == 3 && col == 4)
+						|| (row == 3 && col == 5) || (row == 3 && col == 6)
+						|| (row == 4 && col == 0) || (row == 4 && col == 6)
+						|| (row == 5 && col == 0) || (row == 5 && col == 1)
+						|| (row == 5 && col == 5) || (row == 5 && col == 6)
+						|| (row == 6 && col == 0) || (row == 6 && col == 1)
+						|| (row == 6 && col == 2) || (row == 6 && col == 3)
+						|| (row == 6 && col == 4) || (row == 6 && col == 5)
+						|| (row == 6 && col == 6)) {
+					matrice[row][col].RValue = smiley_color1.RValue;
+					matrice[row][col].GValue = smiley_color1.GValue;
+					matrice[row][col].BValue = smiley_color1.BValue;
+				} else {
+					matrice[row][col].RValue = smiley_color2.RValue;
+					matrice[row][col].GValue = smiley_color2.GValue;
+					matrice[row][col].BValue = smiley_color2.BValue;
+				}
+			}
+		}
 		SetLedMatrice(matrice, 7);
-		up++;
-		down++;
-		if (up == 7) up = 0;
-		if (down == 7) down = 0;
+		sleep(4);
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 1 && col == 0) || (row == 0 && col == 2)		/*Conditions pour remplissage du smiley cycle 2*/
+						|| (row == 0 && col == 3) || (row == 0 && col == 4)
+						|| (row == 0 && col == 0) || (row == 0 && col == 6)
+						|| (row == 1 && col == 3) || (row == 1 && col == 6)
+						|| (row == 2 && col == 0) || (row == 2 && col == 3)
+						|| (row == 2 && col == 6) || (row == 3 && col == 0)
+						|| (row == 3 && col == 1) || (row == 3 && col == 2)
+						|| (row == 3 && col == 3) || (row == 3 && col == 4)
+						|| (row == 3 && col == 5) || (row == 3 && col == 6)
+						|| (row == 4 && col == 0) || (row == 4 && col == 6)
+						|| (row == 5 && col == 0) || (row == 5 && col == 6)
+						|| (row == 6 && col == 0) || (row == 6 && col == 1)
+						|| (row == 6 && col == 5) || (row == 6 && col == 6)
+						|| (row == 0 && col == 5) || (row == 1 && col == 2)
+						|| (row == 1 && col == 4) || (row == 0 && col == 1)) {
+					matrice[row][col].RValue = smiley_color2.RValue;
+					matrice[row][col].GValue = smiley_color2.GValue;
+					matrice[row][col].BValue = smiley_color2.BValue;
+				} else if ((row == 5 && col == 2) || (row == 5 && col == 3)
+						|| (row == 5 && col == 4)) {
+					matrice[row][col].RValue = colors[RED].RValue;
+					matrice[row][col].GValue = colors[RED].GValue;
+					matrice[row][col].BValue = colors[RED].BValue;
+				} else {
+					matrice[row][col].RValue = smiley_color1.RValue;
+					matrice[row][col].GValue = smiley_color1.GValue;
+					matrice[row][col].BValue = smiley_color1.BValue;
+				}
+			}
+		}
+		SetLedMatrice(matrice, 7);
+		timer--;
 		sleep(4);
 	}
-
-	return 0;
 }
 
+/************************************************************************************************/
+/*									print_colored_square										*/
+/*	But:																						*/
+/*		Fonction qui affiche un décompte de 9 à 0 avec une couleur variable.					*/
+/*																								*/
+/* 	Interface:																					*/
+/* 		*matrice[] qui est un tableau de tableaux de structures de type led (struct).			*/
+/*																								*/
+/************************************************************************************************/
+
+void countdown(led *matrice[]) {
+	int actual_color = 0;
+	for (int number = 9; number >= 0; number--) { /*Boucle de décompte de 9 à 0*/
+		Setnumber(matrice, number, colors[actual_color], colors[BLACK]);
+		SetLedMatrice(matrice, 7);
+		actual_color++;
+		if (actual_color == 6)
+			actual_color = 0;
+		sleep(4);
+	}
+}
+
+int main(void) {
+//	countdown(matrice);
+	SetFlashingSmiley(matrice, colors[YELLOW], colors[BLACK], 30);
+	return 0;
+}
 
 /*void SetLedColor(int led_num, led leds[]) {
  if (leds[led_num].RValue != COLOR_OFF && leds[led_num].GValue == COLOR_OFF && leds[led_num].BValue == COLOR_OFF) {
