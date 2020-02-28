@@ -104,8 +104,8 @@ int* analyze_text(wchar_t text[])
 int main(void)
 {
 	setlocale(LC_ALL, "");
-	FILE *example_file = fopen("/home/jonathan/Desktop/Repositories/61_count_char_file/Debug/example.txt", "rt+, ccs=UTF-8");
-	FILE *out = fopen("/home/jonathan/Desktop/Repositories/61_count_char_file/Debug/out.txt", "w");
+	FILE *example_file = fopen("/home/jonathan/Desktop/Repositories/exercices_C/61_count_char_file/Debug/example.txt", "rt+, ccs=UTF-8");
+	FILE *out = fopen("/home/jonathan/Desktop/Repositories/exercices_C/61_count_char_file/Debug/out.txt", "w");
 	wchar_t ch;
 	if (example_file == NULL)
 	{
