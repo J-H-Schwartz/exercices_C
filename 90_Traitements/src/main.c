@@ -95,6 +95,42 @@ COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
 COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
 COLOR_OFF, COLOR_OFF,
 COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+
+static led line_1_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_2_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_3_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_4_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_5_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_6_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_7_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
 static led *matrice[7] = { line_1, line_2, line_3, line_4, line_5, line_6,
 		line_7 };
 
@@ -104,6 +140,8 @@ COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_ON }, { COLOR_ON,
 COLOR_ON, COLOR_ON }, { COLOR_ON, COLOR_OFF, COLOR_ON }, { COLOR_ON,
 COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
 
+led *old_matrice [7]= { line_1_1, line_2_1, line_3_1, line_4_1, line_5_1, line_6_1,
+		line_7_1 };
 /************************************************************************************************/
 /*									SetLedNewColor												*/
 /*	But:																						*/
@@ -135,10 +173,18 @@ void SetLedNewColor(led leds_table[], int led_num, led new_led_color) {
 
 void SetLedMatrice(led *leds_table[], int Tabsize) {
 	for (int row = 0; row < Tabsize; row++) {
-		for (int col = 0; col < Tabsize; col++) {
-			setLedColor((row + 1), (col + 1), leds_table[row][col].RValue,
-					leds_table[row][col].GValue, leds_table[row][col].BValue);
-
+		for (int col = 0; col < Tabsize; col++){
+			if ((leds_table[row][col].RValue != old_matrice[row][col].RValue) || (leds_table[row][col].GValue != old_matrice[row][col].GValue) || (leds_table[row][col].BValue != old_matrice[row][col].BValue)){
+				setLedColor((row + 1), (col + 1), leds_table[row][col].RValue,
+						leds_table[row][col].GValue, leds_table[row][col].BValue);
+			}
+		}
+	}
+	for (int row = 0; row < Tabsize; row++){
+		for (int col = 0; col < Tabsize; col++){
+			old_matrice[row][col].RValue = leds_table[row][col].RValue;
+			old_matrice[row][col].GValue = leds_table[row][col].GValue;
+			old_matrice[row][col].BValue = leds_table[row][col].BValue;
 		}
 	}
 }
@@ -697,24 +743,22 @@ void SetFlashingSmiley(led *matrice[], led smiley_color1, led smiley_color2,
 /************************************************************************************************/
 
 void countdown(led *matrice[]) {
-	int actual_color = 0;
 	for (int number = 9; number >= 0; number--) { /*Boucle de décompte de 9 à 0*/
-		Setnumber(matrice, number, colors[actual_color], colors[BLACK]);
+		Setnumber(matrice, number, colors[RED], colors[BLACK]);
 		SetLedMatrice(matrice, 7);
-		actual_color++;
-		if (actual_color == 6)
-			actual_color = 0;
-		sleep(4);
+		sleep(1);
 	}
 }
 
 int main(void) { /* Décompte de 9 à 0 puis fait clignoter un smiley*/
-//	countdown(matrice);
+	countdown(matrice);
+/*
 	for (int number = 9; number >= 0; number--){
 		countdown_2(matrice, colors[RED], number);
 		SetLedMatrice(matrice, 7);
 		sleep(2);
 	}
+*/
 //	SetFlashingSmiley(matrice, colors[YELLOW], colors[BLACK], 30);
 	return 0;
 }
