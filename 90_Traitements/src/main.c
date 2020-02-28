@@ -40,7 +40,6 @@
 #define YELLOW 5
 #define BLACK 6
 
-
 typedef struct { /*Définition du nouveau type led qui contient les valeurs des couleurs*/
 	int RValue; /*Rouge, Verte, et Bleue et qui est une struct.						  */
 	int GValue;
@@ -103,7 +102,7 @@ static led colors[7] = { { COLOR_ON, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
 COLOR_ON,
 COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_ON }, { COLOR_ON,
 COLOR_ON, COLOR_ON }, { COLOR_ON, COLOR_OFF, COLOR_ON }, { COLOR_ON,
-COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }};
+COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
 
 /************************************************************************************************/
 /*									SetLedNewColor												*/
@@ -395,7 +394,211 @@ void Setnumber(led *matrice[], int number, led color, led background_color) {
 	}
 }
 
+/************************************************************************************************/
+/*									countdown_2													*/
+/*	But:																						*/
+/*		Fonction qui décompte de 9 à 0 mais en optimisant les instructions.						*/
+/*																								*/
+/* 	Interface:																					*/
+/* 		*matrice[] qui est un tableau de tableaux de structures de type led (struct).			*/
+/*		number qui est le numéro à afficher par la matrice, de type integer.			 		*/
+/*		color qui est la couleur à appliquer au chiffre, de type led (struct).					*/
+/*																								*/
+/************************************************************************************************/
 
+void countdown_2(led *matrice[], led color, int number) {
+	if (number == 9) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 0 && col == 2) || (row == 0 && col == 3) /*Ensemble de conditions pour afficher le chiffre 9*/
+				|| (row == 0 && col == 4) || (row == 1 && col == 1)
+						|| (row == 2 && col == 1) || (row == 2 && col == 5)
+						|| (row == 3 && col == 2) || (row == 3 && col == 3)
+						|| (row == 3 && col == 4) || (row == 3 && col == 5)
+						|| (row == 4 && col == 5) || (row == 5 && col == 1)
+						|| (row == 5 && col == 5) || (row == 6 && col == 2)
+						|| (row == 6 && col == 3) || (row == 6 && col == 4)
+						|| (row == 1 && col == 5)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				}
+			}
+		}
+	} else if (number == 8) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 4 && col == 1)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if (row == 3 && col == 5) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 7) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 0 && col == 1) || (row == 0 && col == 5)
+						|| (row == 3 && col == 5) || (row == 6 && col == 5)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 1 && col == 1) || (row == 1 && col == 2)
+						|| (row == 4 && col == 1) || (row == 5 && col == 1)
+						|| (row == 6 && col == 2) || (row == 6 && col == 3)
+						|| (row == 6 && col == 4) || (row == 2 && col == 1)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 6) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 1 && col == 1) || (row == 2 && col == 1)
+						|| (row == 3 && col == 1) || (row == 3 && col == 2)
+						|| (row == 4 && col == 1) || (row == 5 && col == 1)
+						|| (row == 6 && col == 2) || (row == 6 && col == 3)
+						|| (row == 6 && col == 4)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 0 && col == 1) || (row == 0 && col == 5)
+						|| (row == 2 && col == 5) || (row == 3 && col == 5)
+						|| (row == 6 && col == 5)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 5) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 0 && col == 1) || (row == 0 && col == 5)
+						|| (row == 6 && col == 1)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 1 && col == 5) || (row == 4 && col == 1)
+						|| (row == 5 && col == 1)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 4) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 1 && col == 3) || (row == 1 && col == 4)
+						|| (row == 2 && col == 2) || (row == 2 && col == 4)
+						|| (row == 3 && col == 5) || (row == 4 && col == 4)
+						|| (row == 5 && col == 4)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 0 && col == 1) || (row == 0 && col == 2)
+						|| (row == 0 && col == 3) || (row == 0 && col == 5)
+						|| (row == 1 && col == 1) || (row == 2 && col == 1)
+						|| (row == 4 && col == 5) || (row == 5 && col == 5)
+						|| (row == 6 && col == 1) || (row == 6 && col == 2)
+						|| (row == 6 && col == 3)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 3) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 0 && col == 2) || (row == 0 && col == 3)
+						|| (row == 1 && col == 1) || (row == 1 && col == 5)
+						|| (row == 2 && col == 5) || (row == 4 && col == 5)
+						|| (row == 6 && col == 2) || (row == 6 && col == 3)
+						|| (row == 5 && col == 5) || (row == 5 && col == 1)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 1 && col == 3) || (row == 1 && col == 4)
+						|| (row == 2 && col == 2) || (row == 2 && col == 4)
+						|| (row == 3 && col == 1) || (row == 3 && col == 2)
+						|| (row == 3 && col == 3) || (row == 3 && col == 5)
+						|| (row == 4 && col == 4) || (row == 5 && col == 4)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 2) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 3 && col == 2) || (row == 3 && col == 3)
+						|| (row == 4 && col == 1) || (row == 6 && col == 5)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 4 && col == 5) || (row == 5 && col == 5)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 1) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 2 && col == 4) || (row == 1 && col == 3)
+						|| (row == 1 && col == 4) || (row == 2 && col == 2)
+						|| (row == 3 && col == 1) || (row == 4 && col == 4)
+						|| (row == 5 && col == 4)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 0 && col == 2) || (row == 0 && col == 3)
+						|| (row == 1 && col == 1) || (row == 1 && col == 5)
+						|| (row == 2 && col == 5) || (row == 3 && col == 2)
+						|| (row == 3 && col == 3) || (row == 4 && col == 1)
+						|| (row == 5 && col == 1) || (row == 6 && col == 2)
+						|| (row == 6 && col == 3) || (row == 6 && col == 5)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	} else if (number == 0) {
+		for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				if ((row == 0 && col == 2) || (row == 0 && col == 3)
+						|| (row == 1 && col == 1) || (row == 1 && col == 5)
+						|| (row == 2 && col == 1) || (row == 2 && col == 5)
+						|| (row == 3 && col == 1) || (row == 3 && col == 5)
+						|| (row == 4 && col == 1) || (row == 4 && col == 5)
+						|| (row == 5 && col == 1) || (row == 5 && col == 5)
+						|| (row == 6 && col == 2) || (row == 6 && col == 3)) {
+					matrice[row][col].RValue = color.RValue;
+					matrice[row][col].GValue = color.GValue;
+					matrice[row][col].BValue = color.BValue;
+				} else if ((row == 1 && col == 4) || (row == 1 && col == 3)
+						|| (row == 2 && col == 2) || (row == 2 && col == 4)
+						|| (row == 3 && col == 4) || (row == 4 && col == 4)
+						|| (row == 5 && col == 4)) {
+					matrice[row][col].RValue = colors[BLACK].RValue;
+					matrice[row][col].GValue = colors[BLACK].GValue;
+					matrice[row][col].BValue = colors[BLACK].BValue;
+				}
+			}
+		}
+	}
+}
 
 /************************************************************************************************/
 /*									SetFlashingSmiley											*/
@@ -415,8 +618,8 @@ void SetFlashingSmiley(led *matrice[], led smiley_color1, led smiley_color2,
 	while (timer > 0) {
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 0 && col == 1) || (row == 0 && col == 2)	/*Conditions pour remplissage du smiley cycle 1*/
-						|| (row == 0 && col == 3) || (row == 0 && col == 4)
+				if ((row == 0 && col == 1) || (row == 0 && col == 2) /*Conditions pour remplissage du smiley cycle 1*/
+				|| (row == 0 && col == 3) || (row == 0 && col == 4)
 						|| (row == 0 && col == 0) || (row == 0 && col == 6)
 						|| (row == 0 && col == 5) || (row == 1 && col == 0)
 						|| (row == 1 && col == 2) || (row == 1 && col == 3)
@@ -447,8 +650,8 @@ void SetFlashingSmiley(led *matrice[], led smiley_color1, led smiley_color2,
 		sleep(4);
 		for (int row = 0; row < 7; row++) {
 			for (int col = 0; col < 7; col++) {
-				if ((row == 1 && col == 0) || (row == 0 && col == 2)		/*Conditions pour remplissage du smiley cycle 2*/
-						|| (row == 0 && col == 3) || (row == 0 && col == 4)
+				if ((row == 1 && col == 0) || (row == 0 && col == 2) /*Conditions pour remplissage du smiley cycle 2*/
+				|| (row == 0 && col == 3) || (row == 0 && col == 4)
 						|| (row == 0 && col == 0) || (row == 0 && col == 6)
 						|| (row == 1 && col == 3) || (row == 1 && col == 6)
 						|| (row == 2 && col == 0) || (row == 2 && col == 3)
@@ -484,7 +687,7 @@ void SetFlashingSmiley(led *matrice[], led smiley_color1, led smiley_color2,
 }
 
 /************************************************************************************************/
-/*									print_colored_square										*/
+/*									countdown													*/
 /*	But:																						*/
 /*		Fonction qui affiche un décompte de 9 à 0 avec une couleur variable.					*/
 /*																								*/
@@ -505,9 +708,14 @@ void countdown(led *matrice[]) {
 	}
 }
 
-int main(void) {
+int main(void) { /* Décompte de 9 à 0 puis fait clignoter un smiley*/
 //	countdown(matrice);
-	SetFlashingSmiley(matrice, colors[YELLOW], colors[BLACK], 30);
+	for (int number = 9; number >= 0; number--){
+		countdown_2(matrice, colors[RED], number);
+		SetLedMatrice(matrice, 7);
+		sleep(2);
+	}
+//	SetFlashingSmiley(matrice, colors[YELLOW], colors[BLACK], 30);
 	return 0;
 }
 
