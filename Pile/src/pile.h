@@ -15,6 +15,13 @@ typedef struct pile {
 	struct pile *prec;
 } pile;
 
+typedef struct pileMessage {
+	struct pileMessage *prec;
+	char valeur[];
+//	char *valeur;
+} pileMessage;
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,6 +45,16 @@ int Length(pile *p);
 /*  Affiche la totalité de la pile en commençant par le sommet. */
 
 void View(pile *);
+
+void ViewM(pileMessage *);
+
+void PushM(pileMessage **, char[]);
+
+char PopM(pileMessage **);
+
+void ClearM(pileMessage **);
+
+int LengthM(pileMessage *p);
 
 #ifdef __cplusplus
 }

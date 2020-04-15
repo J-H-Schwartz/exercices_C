@@ -65,6 +65,28 @@ int main() {
 
 	Clear(&MaPile); /* Vider la pile avant de quitter. */
 
+	pileMessage *MaPileMessage = NULL;
+
+	PushM(&MaPileMessage, "ceci est une pile texte");
+	PushM(&MaPileMessage, "les messages sont de tailles variables");
+	PushM(&MaPileMessage, "et on ne connaît pas à l'avance quelle est la taille des messages à stocker");
+	printf("Nb d'elements : %d\n", LengthM(MaPileMessage));
+
+	ViewM(MaPileMessage);
+	PopM(&MaPileMessage);
+	ViewM(MaPileMessage);
+	printf("Nb d'elements : %d\n", LengthM(MaPileMessage));
+
+	ClearM(&MaPileMessage);
+	printf("Ce qu'il reste de la pile:\n");
+	ViewM(MaPileMessage);
+	printf("Rien\n");
+	printf("Nb d'elements : %d\n", LengthM(MaPileMessage));
+
+	PushM(&MaPileMessage, "Deuxième essai\n");
+	ViewM(MaPileMessage);
+	printf("Nb d'elements : %d\n", LengthM(MaPileMessage));
+
 #ifdef _WIN32
 	system("PAUSE"); /* Pour la console Windows. */
 #endif

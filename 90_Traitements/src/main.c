@@ -732,6 +732,31 @@ void SetFlashingSmiley(led *matrice[], led smiley_color1, led smiley_color2,
 	}
 }
 
+void fck_dessin(led *matrice[]){
+	for (int row = 0; row < 7; row++) {
+				for (int col = 0; col < 7; col++) {
+					if ((row == 1 && col == 3) || (row == 2 && col == 3) /*Conditions pour remplissage du smiley cycle 1*/
+							|| (row == 0 && col == 3) || (row == 3 && col == 2)
+							|| (row == 3 && col == 3) || (row == 3 && col == 4)
+							|| (row == 3 && col == 5) || (row == 4 && col == 1)
+							|| (row == 4 && col == 2) || (row == 4 && col == 3)
+							|| (row == 4 && col == 4) || (row == 4 && col == 5)
+							|| (row == 5 && col == 1) || (row == 5 && col == 2)
+							|| (row == 5 && col == 3) || (row == 5 && col == 4)
+							|| (row == 5 && col == 5) || (row == 6 && col == 2)
+							|| (row == 6 && col == 3) || (row == 6 && col == 4)) {
+						matrice[row][col].RValue = colors[RED].RValue;
+						matrice[row][col].GValue = colors[RED].GValue;
+						matrice[row][col].BValue = colors[RED].BValue;
+					} else {
+						matrice[row][col].RValue = colors[BLACK].RValue;
+						matrice[row][col].GValue = colors[BLACK].GValue;
+						matrice[row][col].BValue = colors[BLACK].BValue;
+					}
+				}
+			}
+}
+
 /************************************************************************************************/
 /*									countdown													*/
 /*	But:																						*/
@@ -752,6 +777,8 @@ void countdown(led *matrice[]) {
 
 int main(void) { /* Décompte de 9 à 0 puis fait clignoter un smiley*/
 	countdown(matrice);
+//	fck_dessin(matrice);
+//	SetLedMatrice(matrice, 7);
 /*
 	for (int number = 9; number >= 0; number--){
 		countdown_2(matrice, colors[RED], number);
