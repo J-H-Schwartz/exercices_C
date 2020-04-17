@@ -191,7 +191,7 @@ void SetMatriceBack(void){
 /*																								*/
 /************************************************************************************************/
 
-void SetLedMatrice(void) {
+/*void SetLedMatrice(void) {
 	for (int row = 0; row < 7; row++) {
 		for (int col = 0; col < 7; col++){
 			if ((matrice[row][col].RValue != old_matrice[row][col].RValue) || (matrice[row][col].GValue != old_matrice[row][col].GValue) || (matrice[row][col].BValue != old_matrice[row][col].BValue)){
@@ -207,7 +207,7 @@ void SetLedMatrice(void) {
 			old_matrice[row][col].BValue = matrice[row][col].BValue;
 		}
 	}
-}
+}*/
 
 
 /************************************************************************************************/

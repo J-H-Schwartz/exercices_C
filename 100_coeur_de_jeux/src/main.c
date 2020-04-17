@@ -47,70 +47,167 @@
 #define READ_BUTTON_BUFFER_SIZE 4
 #define READ_QUEUE_BUFFER_SIZE 3
 
+//Display matrixes.
+static led line_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_2[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_3[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_4[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_5[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_6[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_7[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+
+static led line_1_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_2_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_3_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_4_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_5_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_6_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+static led line_7_1[7] = { { COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF }, {
+COLOR_OFF, COLOR_OFF,
+COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+
+
+static led *matrice[7] = { line_1, line_2, line_3, line_4, line_5, line_6,
+		line_7 };
+static led *old_matrice [7]= { line_1_1, line_2_1, line_3_1, line_4_1, line_5_1, line_6_1,
+		line_7_1 };
+
 //Game pads controls
-typedef enum{
+typedef enum {
 	PAD_1 = 49,
 	PAD_2 = 50,
 	DOWN_PAD = 100,
 	LEFT_PAD = 108,
 	RIGHT_PAD = 114,
 	UP_PAD = 117
-}Pads_controls;
+} Pads_controls;
 
 //Pad command Identifier
 typedef enum {
-	NO_PAD,
-	PAD_1_COMMAND,
-	PAD_2_COMMAND
-}Pad_Identifier;
+	NO_PAD, PAD_1_COMMAND, PAD_2_COMMAND
+} Pad_Identifier;
 
 // Victory type command enum.
 typedef enum {
-	LINE_VICTORY,
-	COL_VICTORY,
-	RIGHT_DIAG_VICTORY,
-	LEFT_DIAG_VICTORY
-}Display_victory_command;
+	LINE_VICTORY, COL_VICTORY, RIGHT_DIAG_VICTORY, LEFT_DIAG_VICTORY
+} Display_victory_command;
 
 //Game mode enum.
 typedef enum {
-	NUMBERS,
-	CONNECT_4
-}Display_mode_command;
+	NUMBERS, CONNECT_4
+} Display_mode_command;
 
 //Game Status enum.
-typedef enum{
-	RESET,
-	PLAY,
-	GAME_END
-}Display_status_command;
+typedef enum {
+	RESET, PLAY, GAME_END
+} Display_status_command;
 
 //Game move commands enum.
-typedef enum{
-	DOWN_COMMAND,
-	UP_COMMAND,
-	LEFT_COMMAND,
-	RIGHT_COMMAND,
-	NEXT_PLAYER_COMMAND
-}Move_command;
+typedef enum {
+	DOWN_COMMAND, UP_COMMAND, LEFT_COMMAND, RIGHT_COMMAND, NEXT_PLAYER_COMMAND
+} Move_command;
 
-//Global Static Vars, inter-thread communication.
+typedef enum{
+	NO_WAIT, WAIT
+}Receive_Wait_Status;
+
+//Global Static queues, inter-thread communication.
 static struct Queue* read_queue;
 static struct Queue* write_queue;
-static pthread_t thread_id;
-static pthread_t write_thread_id_set;
-//static pthread_t write_thread_id_blink;
-static int receive_count;
-static char tmp_message_write[8];
+
 static victory_infos_struct victory_infos;
 
 //Defined colors table of structs.
-static led colors[7] = { { COLOR_ON, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
+/*static led colors[7] = { { COLOR_ON, COLOR_OFF, COLOR_OFF }, { COLOR_OFF,
 COLOR_ON,
 COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_ON }, { COLOR_ON,
 COLOR_ON, COLOR_ON }, { COLOR_ON, COLOR_OFF, COLOR_ON }, { COLOR_ON,
-COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };
+COLOR_ON, COLOR_OFF }, { COLOR_OFF, COLOR_OFF, COLOR_OFF } };*/
 
+static const int mask_red = 0xFF0000;
+static const int mask_green = 0xFF00;
+static const int mask_blue = 0xFF;
+
+
+void victory_W(int color);
+
+void SetLedMatrice(void) {
+	for (int row = 0; row < 7; row++) {
+		for (int col = 0; col < 7; col++){
+			if ((matrice[row][col].RValue != old_matrice[row][col].RValue) || (matrice[row][col].GValue != old_matrice[row][col].GValue) || (matrice[row][col].BValue != old_matrice[row][col].BValue)){
+				setLedColor((row + 1), (col + 1), matrice[row][col].RValue,
+						matrice[row][col].GValue, matrice[row][col].BValue);
+			}
+		}
+	}
+	for (int row = 0; row < 7; row++){
+		for (int col = 0; col < 7; col++){
+			old_matrice[row][col].RValue = matrice[row][col].RValue;
+			old_matrice[row][col].GValue = matrice[row][col].GValue;
+			old_matrice[row][col].BValue = matrice[row][col].BValue;
+		}
+	}
+}
+
+void SetTokenColor(led* token, unsigned int color){
+	token->RValue = (color & mask_red) >> 16;
+	token->GValue = (color & mask_green) >> 8;
+	token->BValue = color & mask_blue;
+}
 
 // Victory struct initialization.
 void initialize_victory_struct(void) {
@@ -133,38 +230,44 @@ void initialize_victory_struct(void) {
 void SendMessage(Queue_id queue, char* message, int message_length) {
 
 	if (queue == QUEUE_READ) {
-		if (message_length <= READ_QUEUE_BUFFER_SIZE) {
+		if (message_length == READ_QUEUE_BUFFER_SIZE) {
 			add_to_Queue(read_queue, message);
 			sem_post(&read_queue->semaphore);
 			printf("Message sent.\n");
-		} else printf("Send message Failed ! Buffer Overflow !\n");
+		} else
+			printf("Send message Failed ! Buffer Overflow !\n");
 	} else if (queue == QUEUE_WRITE) {
-		if (message_length <= WRITE_QUEUE_BUFFER_SIZE) {
+		if (message_length == WRITE_QUEUE_BUFFER_SIZE) {
 			add_to_Queue(write_queue, message);
 			sem_post(&write_queue->semaphore);
 			printf("Message sent.\n");
-		} else printf("Send message Failed ! Buffer Overflow !\n");
+		} else
+			printf("Send message Failed ! Buffer Overflow !\n");
 	} else
 		printf("Send message Failed ! Queue unidentified !\n");
 }
 
 //Receive message through queues, inter-thread communication.
-int ReceiveMessage(Queue_id queue, char* message, int message_length) {
+int ReceiveMessage(Queue_id queue, char* message, int message_length, int wait_status) {
 	if (queue == QUEUE_WRITE) {
-		if (message_length >= WRITE_QUEUE_BUFFER_SIZE) {
-			//sem_wait(&write_queue->semaphore);
+		if (message_length == WRITE_QUEUE_BUFFER_SIZE) {
+			if (wait_status == WAIT){
+				sem_wait(&write_queue->semaphore);
+				printf("Message received.\n");
+			}
 			int status = del_from_Queue(write_queue, message);
-			printf("Message received.\n");
 			return status;
 		} else {
 			printf("Receive message failed ! Buffer Overflow !\n");
 			return -1;
 		}
 	} else if (queue == QUEUE_READ) {
-		if (message_length >= READ_QUEUE_BUFFER_SIZE) {
-			sem_wait(&read_queue->semaphore);
+		if (message_length == READ_QUEUE_BUFFER_SIZE) {
+			if (wait_status == WAIT){
+				sem_wait(&read_queue->semaphore);
+				printf("Message received.\n");
+			}
 			del_from_Queue(read_queue, message);
-			printf("Message received.\n");
 			return 0;
 		} else {
 			printf("Receive message failed ! Buffer Overflow !\n");
@@ -197,7 +300,7 @@ void *thread_handler_read(void* args) {
 			if (button_read[1] == PAD_1) {
 				command[0] = UP_COMMAND;
 				command[1] = PAD_1_COMMAND;
-			} else if (button_read[1] == PAD_2){
+			} else if (button_read[1] == PAD_2) {
 				command[0] = UP_COMMAND;
 				command[1] = PAD_2_COMMAND;
 			}
@@ -205,7 +308,7 @@ void *thread_handler_read(void* args) {
 			if (button_read[1] == PAD_1) {
 				command[0] = DOWN_COMMAND;
 				command[1] = PAD_1_COMMAND;
-			} else if (button_read[1] == PAD_2){
+			} else if (button_read[1] == PAD_2) {
 				command[0] = DOWN_COMMAND;
 				command[1] = PAD_2_COMMAND;
 			}
@@ -213,7 +316,7 @@ void *thread_handler_read(void* args) {
 			if (button_read[1] == PAD_1) {
 				command[0] = LEFT_COMMAND;
 				command[1] = PAD_1_COMMAND;
-			} else if (button_read[1] == PAD_2){
+			} else if (button_read[1] == PAD_2) {
 				command[0] = LEFT_COMMAND;
 				command[1] = PAD_2_COMMAND;
 			}
@@ -221,7 +324,7 @@ void *thread_handler_read(void* args) {
 			if (button_read[1] == PAD_1) {
 				command[0] = RIGHT_COMMAND;
 				command[1] = PAD_1_COMMAND;
-			} else if (button_read[1] == PAD_2){
+			} else if (button_read[1] == PAD_2) {
 				command[0] = RIGHT_COMMAND;
 				command[1] = PAD_2_COMMAND;
 			}
@@ -248,8 +351,8 @@ void *thread_handler_app(void* args) {
 	char tmp_command[READ_QUEUE_BUFFER_SIZE];
 	while (1) {
 		//Wait message from reading queue.
-		ReceiveMessage(QUEUE_READ, tmp_command, READ_QUEUE_BUFFER_SIZE);
-		printf("App handler received: %d %d %d\n", tmp_command[0], tmp_command[1], tmp_command[2]);
+		ReceiveMessage(QUEUE_READ, tmp_command, READ_QUEUE_BUFFER_SIZE, WAIT);
+		printf("App handler received: %d %d\n", tmp_command[0], tmp_command[1]);
 
 		//Process message from reading queue.
 
@@ -281,8 +384,9 @@ void *thread_handler_app(void* args) {
 			tmp_message[7] = move.end.c;
 			SendMessage(QUEUE_WRITE, tmp_message, WRITE_QUEUE_BUFFER_SIZE);
 			continue;
-		//If LEFT button is pushed.
-		} else if (tmp_command[0] == LEFT_COMMAND && tmp_command[1] == move.player) {
+			//If LEFT button is pushed.
+		} else if (tmp_command[0] == LEFT_COMMAND
+				&& tmp_command[1] == move.player) {
 			move = gp4_move_left();
 			tmp_message[0] = CONNECT_4;
 			tmp_message[1] = PLAY;
@@ -294,8 +398,9 @@ void *thread_handler_app(void* args) {
 			tmp_message[7] = move.end.c;
 			SendMessage(QUEUE_WRITE, tmp_message, WRITE_QUEUE_BUFFER_SIZE);
 			continue;
-		//If RIGHT button is pushed.
-		} else if (tmp_command[0] == RIGHT_COMMAND && tmp_command[1] == move.player) {
+			//If RIGHT button is pushed.
+		} else if (tmp_command[0] == RIGHT_COMMAND
+				&& tmp_command[1] == move.player) {
 			move = gp4_move_right();
 			tmp_message[0] = CONNECT_4;
 			tmp_message[1] = PLAY;
@@ -367,13 +472,47 @@ void *thread_handler_app(void* args) {
 	return 0;
 }
 
-//Led panel controlling handler and blinking handler. 2 THREADS !.
+//Led panel controlling handler.
 void *thread_handler_write(void* args) {
+	int receive_count = 1;
+	char tmp_message_write[8];
+	tmp_message_write[3] = 1;
+	unsigned int color = GREEN_COLOR;
+	SetTokenColor(&matrice[0][0], GREEN);
+	SetLedMatrice();
 	while (1) {
-		//if (pthread_self() == write_thread_id_set) {
-			//Wait message from writing queue.
-		if (ReceiveMessage(QUEUE_WRITE, tmp_message_write, WRITE_QUEUE_BUFFER_SIZE) == 0){
-			printf("Write handler received: %d %d %d %d %d %d %d %d\n", tmp_message_write[0], tmp_message_write[1], tmp_message_write[2], tmp_message_write[3], tmp_message_write[4], tmp_message_write[5], tmp_message_write[6], tmp_message_write[7]);
+		//Wait message from writing queue.
+		if (ReceiveMessage(QUEUE_WRITE, tmp_message_write,
+				WRITE_QUEUE_BUFFER_SIZE, NO_WAIT) == 0) {
+			switch (tmp_message_write[3]) {
+			case RED:
+				color = RED_COLOR;
+				break;
+			case GREEN:
+				color = GREEN_COLOR;
+				break;
+			case BLUE:
+				color = BLUE_COLOR;
+				break;
+			case WHITE:
+				color = WHITE_COLOR;
+				break;
+			case PURPLE:
+				color = PURPLE_COLOR;
+				break;
+			case YELLOW:
+				color = YELLOW_COLOR;
+				break;
+			case BLACK:
+				color = BLACK_COLOR;
+				break;
+			default : color = BLACK_COLOR;
+			}
+			printf("Write handler received: %d %d %d %d %d %d %d %d\n",
+					tmp_message_write[0], tmp_message_write[1],
+					tmp_message_write[2], tmp_message_write[3],
+					tmp_message_write[4], tmp_message_write[5],
+					tmp_message_write[6], tmp_message_write[7]);
 
 			if (tmp_message_write[0] == CONNECT_4) {
 
@@ -381,12 +520,14 @@ void *thread_handler_write(void* args) {
 				gp4_display();
 				//Empty grid condition.
 				if (tmp_message_write[1] == RESET) {
-					for (int row = 2; row < 8; row++) {
-						for (int col = 1; col < 8; col++) {
-							setLedColor(row, col, colors[BLACK].RValue,
-									colors[BLACK].GValue, colors[BLACK].BValue);
+
+					for (int row = 1; row < 7; row++){
+						for (int col = 0; col < 7; col++){
+
+							SetTokenColor(&matrice[row][col], BLACK_COLOR);
 						}
 					}
+					SetLedMatrice();
 					break;
 				}
 				receive_count += 1;
@@ -395,175 +536,150 @@ void *thread_handler_write(void* args) {
 					if (tmp_message_write[2] == DOWN_COMMAND) {
 						printf("VALIDATION\n");
 						receive_count = 0;
+						int previous_row;
+						int col = (int)tmp_message_write[7];
 						for (int row = 2;
-								row <= (tmp_message_write[6] + LED_PANEL_OFFSET);
+								row < (tmp_message_write[6] + LED_PANEL_OFFSET);
 								row++) {
-							setLedColor(row - 1,
-									(tmp_message_write[7] + LED_PANEL_OFFSET),
-									colors[BLACK].RValue, colors[BLACK].GValue,
-									colors[BLACK].BValue);
-							setLedColor(row,
-									(tmp_message_write[7] + LED_PANEL_OFFSET),
-									colors[(int) tmp_message_write[3]].RValue,
-									colors[(int) tmp_message_write[3]].GValue,
-									colors[(int) tmp_message_write[3]].BValue);
-							usleep(500000);
+							previous_row = row - 1;
+
+							SetTokenColor(&matrice[previous_row][col], BLACK_COLOR);
+
+							SetTokenColor(&matrice[row][col], color);
+							SetLedMatrice();
+							usleep(150000);
 						}
+
+
+
 						//If LEFT or RIGHT button pressed. Side move animation.
 					} else if (tmp_message_write[2] == LEFT_COMMAND
 							|| tmp_message_write[2] == RIGHT_COMMAND) {
-						setLedColor(1,
-								(tmp_message_write[5] + LED_PANEL_OFFSET),
-								colors[BLACK].RValue, colors[BLACK].GValue,
-								colors[BLACK].BValue);
-						setLedColor(1,
-								(tmp_message_write[7] + LED_PANEL_OFFSET),
-								colors[(int) tmp_message_write[3]].RValue,
-								colors[(int) tmp_message_write[3]].GValue,
-								colors[(int) tmp_message_write[3]].BValue);
-						//Next Player animation, change color and replace play token.
+
+						SetTokenColor(&matrice[0][(int) tmp_message_write[5]], BLACK_COLOR);
+
+						SetTokenColor(&matrice[0][(int) tmp_message_write[7]], color);
+					//Next Player animation, change color and replace play token.
 					} else if (tmp_message_write[2] == NEXT_PLAYER_COMMAND) {
-						setLedColor(1,
-								(tmp_message_write[7] + LED_PANEL_OFFSET),
-								colors[(int) tmp_message_write[3]].RValue,
-								colors[(int) tmp_message_write[3]].GValue,
-								colors[(int) tmp_message_write[3]].BValue);
+
+						SetTokenColor(&matrice[0][(int) tmp_message_write[7]], color);
 					}
 					//Line victory blink.
 				} else if (tmp_message_write[1] == GAME_END) {
 					if (tmp_message_write[2] == LINE_VICTORY) {
 						receive_count = 0;
-						for (int count = 0; count < 30; count++) {
-							for (int col = (tmp_message_write[5]
-									+ LED_PANEL_OFFSET);
+						int row = (int)tmp_message_write[4] + TOP_ROW_OFFSET;
+						for (int count = 0; count < 15; count++) {
+							for (int col = tmp_message_write[5];
 									col
-											<= (tmp_message_write[7]
-													+ LED_PANEL_OFFSET);
+											<= tmp_message_write[7];
 									col++) {
-								setLedColor(
-										tmp_message_write[4] + LED_PANEL_OFFSET
-												+ TOP_ROW_OFFSET, col,
-										colors[BLACK].RValue,
-										colors[BLACK].GValue,
-										colors[BLACK].BValue);
+
+								SetTokenColor(&matrice[row][col], BLACK_COLOR);
 							}
-							sleep(1);
-							for (int col = (tmp_message_write[5]
-									+ LED_PANEL_OFFSET);
+							SetLedMatrice();
+							usleep(500000);
+							for (int col = tmp_message_write[5];
 									col
-											<= (tmp_message_write[7]
-													+ LED_PANEL_OFFSET);
+											<= tmp_message_write[7];
 									col++) {
-								setLedColor(
-										tmp_message_write[4] + LED_PANEL_OFFSET
-												+ TOP_ROW_OFFSET, col,
-										colors[(int) tmp_message_write[3]].RValue,
-										colors[(int) tmp_message_write[3]].GValue,
-										colors[(int) tmp_message_write[3]].BValue);
+
+								SetTokenColor(&matrice[row][col], color);
 							}
-							sleep(1);
+							SetLedMatrice();
+							usleep(500000);
 						}
+						victory_W(color);
 						//Column victory blink.
 					} else if (tmp_message_write[2] == COL_VICTORY) {
 						receive_count = 0;
-						for (int count = 0; count < 30; count++) {
-							for (int row = (tmp_message_write[4]
-									+ LED_PANEL_OFFSET + TOP_ROW_OFFSET);
+						int col = (int)tmp_message_write[5];
+						for (int count = 0; count < 15; count++) {
+							for (int row = (tmp_message_write[4] + TOP_ROW_OFFSET);
 									row
 											<= (tmp_message_write[6]
-													+ LED_PANEL_OFFSET
-													+ TOP_ROW_OFFSET); row++) {
-								setLedColor(row,
-										tmp_message_write[5] + LED_PANEL_OFFSET,
-										colors[BLACK].RValue,
-										colors[BLACK].GValue,
-										colors[BLACK].BValue);
+													+ TOP_ROW_OFFSET);
+									row++) {
+
+								SetTokenColor(&matrice[row][col], BLACK_COLOR);
 							}
-							sleep(1);
-							for (int row = (tmp_message_write[4]
-									+ LED_PANEL_OFFSET + TOP_ROW_OFFSET);
+							SetLedMatrice();
+							usleep(500000);
+							for (int row = (tmp_message_write[4] + TOP_ROW_OFFSET);
 									row
 											<= (tmp_message_write[6]
-													+ LED_PANEL_OFFSET
-													+ TOP_ROW_OFFSET); row++) {
-								setLedColor(row,
-										tmp_message_write[5] + LED_PANEL_OFFSET,
-										colors[(int) tmp_message_write[3]].RValue,
-										colors[(int) tmp_message_write[3]].GValue,
-										colors[(int) tmp_message_write[3]].BValue);
+													+ TOP_ROW_OFFSET);
+									row++) {
+
+								SetTokenColor(&matrice[row][col], color);
 							}
-							sleep(1);
+							SetLedMatrice();
+							usleep(500000);
 						}
+						victory_W(color);
 						//Right diagonal victory blink.
 					} else if (tmp_message_write[2] == RIGHT_DIAG_VICTORY) {
 						receive_count = 0;
 						int win_row, win_col;
-						for (int count = 0; count < 30; count++) {
-							win_row = tmp_message_write[4] + LED_PANEL_OFFSET
-									+ TOP_ROW_OFFSET;
-							win_col = tmp_message_write[5] + LED_PANEL_OFFSET;
+						for (int count = 0; count < 15; count++) {
+							win_row = tmp_message_write[4] + TOP_ROW_OFFSET;
+							win_col = tmp_message_write[5];
 							for (int tokens = 0; tokens < 4; tokens++) {
-								setLedColor(win_row, win_col,
-										colors[BLACK].RValue,
-										colors[BLACK].GValue,
-										colors[BLACK].BValue);
+
+								SetTokenColor(&matrice[win_row][win_col], BLACK_COLOR);
 								win_row++, win_col++;
 							}
-							sleep(1);
-							win_row = tmp_message_write[4] + LED_PANEL_OFFSET
-									+ TOP_ROW_OFFSET;
-							win_col = tmp_message_write[5] + LED_PANEL_OFFSET;
+							SetLedMatrice();
+							usleep(500000);
+							win_row = tmp_message_write[4] + TOP_ROW_OFFSET;
+							win_col = tmp_message_write[5];
 							for (int tokens = 0; tokens < 4; tokens++) {
-								setLedColor(win_row, win_col,
-										colors[(int) tmp_message_write[3]].RValue,
-										colors[(int) tmp_message_write[3]].GValue,
-										colors[(int) tmp_message_write[3]].BValue);
+
+								SetTokenColor(&matrice[win_row][win_col], color);
 								win_row++, win_col++;
 							}
-							sleep(1);
+							SetLedMatrice();
+							usleep(500000);
 						}
+						victory_W(color);
 						//Left diagonal victory blink.
 					} else if (tmp_message_write[2] == LEFT_DIAG_VICTORY) {
 						receive_count = 0;
 						int win_row, win_col;
-						for (int count = 0; count < 30; count++) {
-							win_row = tmp_message_write[4] + LED_PANEL_OFFSET
-									+ TOP_ROW_OFFSET;
-							win_col = tmp_message_write[5] + LED_PANEL_OFFSET;
+						for (int count = 0; count < 15; count++) {
+							win_row = tmp_message_write[4] + TOP_ROW_OFFSET;
+							win_col = tmp_message_write[5];
 							for (int tokens = 0; tokens < 4; tokens++) {
-								setLedColor(win_row, win_col,
-										colors[BLACK].RValue,
-										colors[BLACK].GValue,
-										colors[BLACK].BValue);
+
+								SetTokenColor(&matrice[win_row][win_col], BLACK_COLOR);
 								win_row--, win_col++;
 							}
-							sleep(1);
-							win_row = tmp_message_write[4] + LED_PANEL_OFFSET
-									+ TOP_ROW_OFFSET;
-							win_col = tmp_message_write[5] + LED_PANEL_OFFSET;
+							SetLedMatrice();
+							usleep(500000);
+							win_row = tmp_message_write[4] + TOP_ROW_OFFSET;
+							win_col = tmp_message_write[5];
 							for (int tokens = 0; tokens < 4; tokens++) {
-								setLedColor(win_row, win_col,
-										colors[(int) tmp_message_write[3]].RValue,
-										colors[(int) tmp_message_write[3]].GValue,
-										colors[(int) tmp_message_write[3]].BValue);
+
+								SetTokenColor(&matrice[win_row][win_col], color);
 								win_row--, win_col++;
 							}
-							sleep(1);
+							SetLedMatrice();
+							usleep(500000);
 						}
+						victory_W(color);
 					}
 				}
 			}
-			//Play token blinking thread. receive_count is used to sync/stop blinking when necessary.
-		} else{// if (pthread_self() == write_thread_id_blink) {
+			SetLedMatrice();
+		} else {
 			if (receive_count > 0) {
-				setLedColor(1, (tmp_message_write[7] + LED_PANEL_OFFSET),
-						colors[(int) tmp_message_write[3]].RValue,
-						colors[(int) tmp_message_write[3]].GValue,
-						colors[(int) tmp_message_write[3]].BValue);
+
+				SetTokenColor(&matrice[0][(int)tmp_message_write[7]], color);
+				SetLedMatrice();
 				usleep(250000);
-				setLedColor(1, (tmp_message_write[7] + LED_PANEL_OFFSET),
-						colors[BLACK].RValue, colors[BLACK].GValue,
-						colors[BLACK].BValue);
+
+				SetTokenColor(&matrice[0][(int)tmp_message_write[7]], BLACK_COLOR);
+				SetLedMatrice();
 				usleep(250000);
 			} else
 				usleep(500000);
@@ -574,18 +690,14 @@ void *thread_handler_write(void* args) {
 	return 0;
 }
 
-
 int main(void) {
-
-	openLink();
+	pthread_t thread_id;
 	read_queue = create_Queue();
 	write_queue = create_Queue();
 
+	openLink();
 	pthread_create(&thread_id, NULL, thread_handler_read, (void*) &thread_id);
-	pthread_create(&write_thread_id_set, NULL, thread_handler_write,
-			(void*) &write_thread_id_set);
-	//pthread_create(&write_thread_id_blink, NULL, thread_handler_write,
-	//		(void*) &write_thread_id_blink);
+	pthread_create(&thread_id, NULL, thread_handler_write, (void*) &thread_id);
 	pthread_create(&thread_id, NULL, thread_handler_app, (void*) &thread_id);
 	pthread_join(thread_id, NULL);
 	printf("Fin du programme.");
@@ -630,4 +742,90 @@ int main(void) {
 	 */
 }
 
+void victory_W(int color){
+	for (int row = 0; row < 7; row++) {
+		for (int col = 0; col < 7; col++) {
+			SetTokenColor(&matrice[row][col], BLACK_COLOR);
+		}
+	}
+	SetLedMatrice();
+	for (int count = 0; count < 30; count++) {
 
+		SetTokenColor(&matrice[1][1], BLACK_COLOR);
+		SetTokenColor(&matrice[2][1], BLACK_COLOR);
+		SetTokenColor(&matrice[3][1], BLACK_COLOR);
+		SetTokenColor(&matrice[4][1], BLACK_COLOR);
+		SetTokenColor(&matrice[5][2], BLACK_COLOR);
+		SetTokenColor(&matrice[4][3], BLACK_COLOR);
+		SetTokenColor(&matrice[5][4], BLACK_COLOR);
+		SetTokenColor(&matrice[4][5], BLACK_COLOR);
+		SetTokenColor(&matrice[3][5], BLACK_COLOR);
+		SetTokenColor(&matrice[2][5], BLACK_COLOR);
+		SetTokenColor(&matrice[1][5], BLACK_COLOR);
+		SetLedMatrice();
+		/*setLedColor(2, 2, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(3, 2, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(4, 2, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(5, 2, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(6, 3, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(5, 4, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(6, 5, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(5, 6, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(4, 6, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(3, 6, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));
+		setLedColor(2, 6, ((BLACK_COLOR & mask_red) >> 16),
+				((BLACK_COLOR & mask_green) >> 8), (BLACK_COLOR & mask_blue));*/
+		usleep(500000);
+		SetTokenColor(&matrice[1][1], color);
+		SetTokenColor(&matrice[2][1], color);
+		SetTokenColor(&matrice[3][1], color);
+		SetTokenColor(&matrice[4][1], color);
+		SetTokenColor(&matrice[5][2], color);
+		SetTokenColor(&matrice[4][3], color);
+		SetTokenColor(&matrice[5][4], color);
+		SetTokenColor(&matrice[4][5], color);
+		SetTokenColor(&matrice[3][5], color);
+		SetTokenColor(&matrice[2][5], color);
+		SetTokenColor(&matrice[1][5], color);
+		SetLedMatrice();
+		/*setLedColor(2, 2, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(3, 2, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(4, 2, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(5, 2, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(6, 3, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(5, 4, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(6, 5, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(5, 6, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(4, 6, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(3, 6, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));
+		setLedColor(2, 6, ((color & mask_red) >> 16),
+				((color & mask_green) >> 8), (color & mask_blue));*/
+		usleep(500000);
+	}
+	for (int row = 0; row < 7; row++) {
+			for (int col = 0; col < 7; col++) {
+				SetTokenColor(&matrice[row][col], BLACK_COLOR);
+			}
+		}
+		SetLedMatrice();
+}

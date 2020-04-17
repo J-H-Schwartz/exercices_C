@@ -77,13 +77,17 @@ typedef struct {
 //Couleurs
 #define COLOR_ON 255
 #define COLOR_OFF 0
-#define RED 0
-#define GREEN 1
-#define BLUE 2
-#define WHITE 3
-#define PURPLE 4
-#define YELLOW 5
-#define BLACK 6
+#define RED_COLOR 0xFF0000
+#define GREEN_COLOR 0x00FF00
+#define BLUE_COLOR 0x0000FF
+#define WHITE_COLOR 0xFFFFFF
+#define PURPLE_COLOR 0xFF00FF
+#define YELLOW_COLOR 0xFFFF00
+#define BLACK_COLOR 0x000000
+
+typedef enum colors{
+	RED, GREEN, BLUE, WHITE, PURPLE, YELLOW, BLACK
+}colors_enum;
 
 /********************************************************************************/
 /* Structure de victoire. 														*/
