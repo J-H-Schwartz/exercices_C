@@ -8,55 +8,7 @@
 #ifndef GAME_P4_H_
 #define GAME_P4_H_
 
-
 #include<stdint.h>
-
-typedef struct { /*Définition du nouveau type led qui contient les valeurs des couleurs*/
-	int RValue; /*Rouge, Verte, et Bleue et qui est une struct.						  */
-	int GValue;
-	int BValue;
-} led;
-
-typedef enum {
-	live, //!< Need to continue game
-	stop_winner, //!< game is finish and winner
-	stop_equal //<! game is finish and equal
-} status_t;
-
-//Victory type enum.
-typedef enum {
-	NO_VICTORY,
-	HORIZONTAL,
-	VERTICAL,
-	RIGHT_DIAGONAL,
-	LEFT_DIAGONAL,
-} victory_t;
-
-typedef enum {
-	NO_PLAYER,
-	PLAYER_1,
-	PLAYER_2
-} player_t;
-
-typedef struct {
-	int8_t l;
-	int8_t c;
-} point_t;
-
-typedef struct {
-	status_t status; //!< status of winner
-	victory_t win_type; //<!
-	player_t win_player; //<! the winner player
-	point_t win_position[4]; //!< position of 4 winner token
-} winner_t;
-
-
-//Structure de renvoi de mouvement.
-typedef struct {
-	int player;
-	int player_color;
-	point_t beg, end;
-}move_t;
 
 //Dimensions de la matrice.
 #define ROWS 6
@@ -68,15 +20,12 @@ typedef struct {
 #define NO_ACTIVE_PLAYER 0
 
 //Couleurs des joueurs.
-#define COLOR_P_1 GREEN
-#define COLOR_P_2 RED
+#define COLOR_P_1 GREEN_COLOR
+#define COLOR_P_2 RED_COLOR
 
 //Couleur du fond.
-#define BACKGROUND_COLOR BLACK
+#define BACKGROUND_COLOR BLACK_COLOR
 
-//Couleurs
-#define COLOR_ON 255
-#define COLOR_OFF 0
 #define RED_COLOR 0xFF0000
 #define GREEN_COLOR 0x00FF00
 #define BLUE_COLOR 0x0000FF
@@ -84,10 +33,66 @@ typedef struct {
 #define PURPLE_COLOR 0xFF00FF
 #define YELLOW_COLOR 0xFFFF00
 #define BLACK_COLOR 0x000000
+#define ORANGE_COLOR 0xFFA500
+#define PINK_COLOR 0xFF69B4
 
-typedef enum colors{
-	RED, GREEN, BLUE, WHITE, PURPLE, YELLOW, BLACK
-}colors_enum;
+// ASCII and OFFSETS regulators.
+#define LED_PANEL_OFFSET 1
+#define TOP_ROW_OFFSET 1
+
+//Victory type enum.
+typedef enum {
+	NO_VICTORY, HORIZONTAL, VERTICAL, RIGHT_DIAGONAL, LEFT_DIAGONAL,
+} victory_t;
+
+typedef struct {
+	int8_t l;
+	int8_t c;
+} point_t;
+
+//Structure de renvoi de mouvement.
+typedef struct {
+	int player;
+	int player_color;
+	point_t beg, end;
+} move_t;
+
+typedef struct Msg_t {
+	uint8_t mode;
+	uint8_t type;
+	uint8_t status;
+	uint8_t pad;
+	uint8_t move_command;
+	uint8_t victory_type;
+	move_t move_coordinates;
+} Msg_t;
+
+typedef enum {
+	TDM_APP, TDM_DISPLAY, TDM_TIMER
+} Type_De_Message;
+
+// Victory type command enum.
+typedef enum {
+	LINE_VICTORY, COL_VICTORY, RIGHT_DIAG_VICTORY, LEFT_DIAG_VICTORY, DRAW_END
+} Display_victory_type;
+
+//Game mode enum.
+typedef enum {
+	NUMBERS, CONNECT_4, COUNTDOWN
+} Display_mode_command;
+
+//Game Status enum.
+typedef enum {
+	RESET, PLAY, GAME_END
+} Game_status;
+
+typedef enum {
+	LIVE, PLAYER_VICTORY, DRAW
+} Game_ends;
+//Game move commands enum.
+typedef enum {
+	DOWN_COMMAND, UP_COMMAND, LEFT_COMMAND, RIGHT_COMMAND, NEXT_PLAYER_COMMAND
+} Move_command;
 
 /********************************************************************************/
 /* Structure de victoire. 														*/
@@ -114,8 +119,8 @@ typedef enum colors{
 /*										\\ 0 -> Pas de victoire.				*/
 /*										\\ 1 -> Victoire en ligne.				*/
 /*										\\ 2 -> Victoire en colonne.			*/
-/*										\\ 3 -> Victoire en diagonale Sud-Est.	*/
-/*										\\ 4 -> Victoire en diagonale Sud-ouest.*/
+/*										\\ 3 -> Victoire en diagonale droite.	*/
+/*										\\ 4 -> Victoire en diagonale gauche.	*/
 /********************************************************************************/
 typedef struct {
 	int8_t game_end;
@@ -123,10 +128,15 @@ typedef struct {
 	int8_t victory_token_coord[2];
 	int8_t victory_line_tokens_coord[4][2];
 	int8_t victory_type;
-} victory_infos_struct;
+} victory_infos_t;
 
-#define VICTORY 1
-#define GAMEOVER 2
+void gp4_initialize_message_struct(Msg_t * message);
+
+// Initialise la struct de victoire.
+void gp4_initialize_victory_struct(victory_infos_t* victory_infos);
+
+// Initialise la struct de  mouvement.
+void gp4_initialize_move_struct(move_t* move);
 
 // Initialise le jeu puissance 4.
 void gp4_init(void);
@@ -150,7 +160,7 @@ move_t gp4_next_player(void);
 move_t gp4_play_token(void);
 
 //Vérifie si le jeton joué est gagnant et retourne une structure de type victory_infos_struct.
-victory_infos_struct gp4_check_winner(void);
+victory_infos_t gp4_check_winner(void);
 
 //Remplie une ligne afin de pouvoir tester la victoire.
 void gp4_debug_set_line(int line, char *RawLine);
