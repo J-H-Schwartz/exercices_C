@@ -124,11 +124,11 @@ static void MX_GPIO_Init(void);
 //	}
 //}
 
-//void receive_from_serial(char *msg_ptr){
-//	MsgToSerial to_receive = EMPTY_MSG_TO_SERIAL;
-//	osMessageQueueGet(receiveFromSerialHandle, to_receive, NULL, osWaitForever);
-//	memcpy(to_receive.params.sendMessage.msg, msg_ptr, to_receive.params.sendMessage.size);
-//}
+void receive_from_serial(char *msg_ptr){
+	MsgToSerial to_receive = EMPTY_MSG_TO_SERIAL;
+	osMessageQueueGet(receiveFromSerialHandle, (void*)&to_receive, NULL, osWaitForever);
+	memcpy(to_receive.params.sendMessage.msg, msg_ptr, to_receive.params.sendMessage.size);
+}
 /**
  * @brief  Function implementing the defaultTask thread.
  * @param  argument: Not used

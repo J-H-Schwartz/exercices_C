@@ -36,9 +36,7 @@ void thread_handler_input(void* args) {
 		if (readbutton(button_read, (READ_BUTTON_BUFFER_SIZE + 1)) == LCRC_OK) {
 
 			//Debug input print.
-			//if (button_read[3] == DOWN_PAD)
-			//	debug_printf(2, "Button press read: %d %d %d %d\n", button_read[0],
-			//			button_read[1], button_read[2], button_read[3]);
+			printf("Button press read: %d %d %d %d\n", button_read[0], button_read[1], button_read[2], button_read[3]);
 			//Process input.
 			if (button_read[3] == DOWN_PAD && button_read[2] == UP_PAD) {
 				command[0] = UP_COMMAND;
