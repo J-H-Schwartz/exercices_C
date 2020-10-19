@@ -10,7 +10,7 @@
 #include<unistd.h>
 #include<string.h>
 #include "cmsis_os.h"
-#include"debug.h"
+
 #include"leds_control.h"
 #include"read_thread.h"
 #include"game_p4.h"
@@ -38,11 +38,11 @@ void *thread_handler_input(void* args) {
 		//Get input.
 		error = readbutton(button_read, (READ_BUTTON_BUFFER_SIZE + 1));
 		if (error != 0)
-			debug_printf(2, "Button error : %d\n", error);
+			////debug_printf(2, "Button error : %d\n", error);
 		//Debug input print.
 		if (button_read[3] == DOWN_PAD) {
-			debug_printf(2, "Button press read: %d %d %d %d\n", button_read[0],
-					button_read[1], button_read[2], button_read[3]);
+			////debug_printf(2, "Button press read: %d %d %d %d\n", button_read[0],
+			//		button_read[1], button_read[2], button_read[3]);
 		}
 		//Process input.
 		if (button_read[3] == DOWN_PAD && button_read[2] == UP_PAD) {

@@ -9,7 +9,7 @@
 #include<stdint.h>
 #include<string.h>
 
-#include"debug.h"
+
 
 #include"game_p4.h"
 
@@ -95,25 +95,25 @@ void gp4_init(void) {
 
 //Affiche la matrice dans la console.
 void gp4_display(void) {
-	char top_line[80 + 1];
-	char tmp_add[10 + 1];
-	snprintf(top_line, 80, "  TOP   = ");
-	for (int8_t col = 0; col < COLS; col++) {
-		if (col == token_top_selector)
-			snprintf(tmp_add, 10, "%d ", active_player);
-		else
-			snprintf(tmp_add, 10, "0 ");
-		strcat(top_line, tmp_add);
-	}
-	snprintf(tmp_add, 10, "(%d)", active_player_color);
-	strcat(top_line, tmp_add);
-	debug_printf(1, "%s\n", top_line);
-	for (int8_t row = 0; row < ROWS; row++) {
-		debug_printf(1, " Line %d = %d %d %d %d %d %d %d\n", (row + 1),
-				gp4_matrix[row][0], gp4_matrix[row][1], gp4_matrix[row][2], gp4_matrix[row][3],
-				gp4_matrix[row][4], gp4_matrix[row][5], gp4_matrix[row][6]);
-	}
-	debug_printf(1, "\n");
+//	char top_line[80 + 1];
+//	char tmp_add[10 + 1];
+//	snprintf(top_line, 80, "  TOP   = ");
+//	for (int8_t col = 0; col < COLS; col++) {
+//		if (col == token_top_selector)
+//			snprintf(tmp_add, 10, "%d ", active_player);
+//		else
+//			snprintf(tmp_add, 10, "0 ");
+//		strcat(top_line, tmp_add);
+//	}
+//	snprintf(tmp_add, 10, "(%d)", active_player_color);
+//	strcat(top_line, tmp_add);
+//	//debug_printf(1, "%s\n", top_line);
+//	for (int8_t row = 0; row < ROWS; row++) {
+//		//debug_printf(1, " Line %d = %d %d %d %d %d %d %d\n", (row + 1),
+//		//		gp4_matrix[row][0], gp4_matrix[row][1], gp4_matrix[row][2], gp4_matrix[row][3],
+//		//		gp4_matrix[row][4], gp4_matrix[row][5], gp4_matrix[row][6]);
+//	}
+	//debug_printf(1, "\n");
 }
 
 //Bouger le jeton en jeu vers la gauche.

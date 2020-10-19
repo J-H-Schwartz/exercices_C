@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "semphr.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -28,7 +29,7 @@
 #include<stdlib.h>
 #include<errno.h>
 #include<string.h>
-#include"debug.h"
+
 #include"queue.h"
 #include"display_thread.h"
 #include"read_thread.h"
@@ -115,25 +116,25 @@ const osMessageQueueAttr_t readFromSerial_attributes = {
   .name = "readFromSerial"
 };
 /* Definitions for start_signal */
-osSemaphoreId_t start_signalHandle;
-const osSemaphoreAttr_t start_signal_attributes = {
-  .name = "start_signal"
-};
+SemaphoreHandle_t start_signalHandle;
+//const osSemaphoreAttr_t start_signal_attributes = {
+//  .name = "start_signal"
+//};
 /* Definitions for reset_signal */
-osSemaphoreId_t reset_signalHandle;
-const osSemaphoreAttr_t reset_signal_attributes = {
-  .name = "reset_signal"
-};
+SemaphoreHandle_t reset_signalHandle;
+//const osSemaphoreAttr_t reset_signal_attributes = {
+//  .name = "reset_signal"
+//};
 /* Definitions for game_end_anim */
-osSemaphoreId_t game_end_animHandle;
-const osSemaphoreAttr_t game_end_anim_attributes = {
-  .name = "game_end_anim"
-};
+SemaphoreHandle_t game_end_animHandle;
+//const osSemaphoreAttr_t game_end_anim_attributes = {
+//  .name = "game_end_anim"
+//};
 /* Definitions for valid_anim */
-osSemaphoreId_t valid_animHandle;
-const osSemaphoreAttr_t valid_anim_attributes = {
-  .name = "valid_anim"
-};
+SemaphoreHandle_t valid_animHandle;
+//const osSemaphoreAttr_t valid_anim_attributes = {
+//  .name = "valid_anim"
+//};
 /* USER CODE BEGIN PV */
 osMutexId_t timer_mutexHandle;
 const osMutexAttr_t timer_mutex_attributes = {
@@ -202,19 +203,19 @@ int main(void)
 
   /* Create the semaphores(s) */
   /* creation of start_signal */
-  start_signalHandle = osSemaphoreNew(1, 1, &start_signal_attributes);
+  start_signalHandle = xSemaphoreCreateBinary();
 
   /* creation of reset_signal */
-  reset_signalHandle = osSemaphoreNew(1, 1, &reset_signal_attributes);
+  reset_signalHandle = xSemaphoreCreateBinary();
 
   /* creation of game_end_anim */
-  game_end_animHandle = osSemaphoreNew(1, 1, &game_end_anim_attributes);
+  game_end_animHandle = xSemaphoreCreateBinary();
 
   /* creation of valid_anim */
-  valid_animHandle = osSemaphoreNew(1, 1, &valid_anim_attributes);
+  //valid_animHandle = osSemaphoreNew(1, 0, &valid_anim_attributes);
+  valid_animHandle = xSemaphoreCreateBinary();
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  timer_mutexHandle = osMutexNew(&timer_mutex_attributes);
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */

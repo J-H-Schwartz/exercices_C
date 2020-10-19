@@ -36,11 +36,11 @@ typedef struct {
 	void* callback_param;
 } timer_struct_t;
 
-uint8_t start_new_timer(timer_struct_t* timer);
+uint8_t start_new_timer(timer_struct_t* timer, uint8_t force_status);
 
 void stop_new_timer(timer_struct_t* timer);
 
-void new_timer_init(timer_struct_t* timer, int timer_setting, void* callback_param);
+void new_timer_init(timer_struct_t* timer, int timer_setting);
 
 void* timer_handler(void* thread_id);
 

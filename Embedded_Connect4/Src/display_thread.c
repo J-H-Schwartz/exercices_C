@@ -9,17 +9,21 @@
 #include<stdlib.h>
 #include<stdint.h>
 #include"cmsis_os.h"
-#include"debug.h"
 #include"leds_control.h"
-
+#include "semphr.h"
 #include"main.h"
 #include"game_p4.h"
 #include"display_thread.h"
 #include"numbers_module.h"
 #include"timer_threads.h"
 
+typedef enum {
+	PLAY_TOKEN, VICTORY,
+} blink_type;
+
 typedef struct {
 	int color;
+	blink_type blink_type;
 	int8_t blink_count;
 	int8_t blink_status;
 	int8_t* coords_table;
@@ -32,6 +36,12 @@ typedef struct {
 	timer_struct_t timer;
 } valid_struct;
 
+
+
+extern timer_struct_t play_token_blink;
+extern timer_struct_t victory_blink;
+extern timer_struct_t valid_move;
+
 //Display queue, gets incoming commands from app.
 extern osMessageQueueId_t display_queueHandle;
 
@@ -40,20 +50,20 @@ static led matrix[DISPLAY_ROWS][DISPLAY_COLS];
 static led old_matrix[DISPLAY_ROWS][DISPLAY_COLS];
 
 void SendToDisplay(Msg_t* command, size_t size) {
-	osMessageQueuePut(display_queueHandle, &command, 0U, 0U);
+	osMessageQueuePut(display_queueHandle, command, 0U, 0U);
 }
 
-extern osSemaphoreId_t start_signalHandle;
+extern SemaphoreHandle_t start_signalHandle;
 void wait_for_display_init(void) {
-	osSemaphoreAcquire(&start_signalHandle, osWaitForever);
+	xSemaphoreTake(start_signalHandle, portMAX_DELAY);
 }
 
-extern osSemaphoreId_t reset_signalHandle;
+extern SemaphoreHandle_t reset_signalHandle;
 void wait_for_display_reset(void) {
-	osSemaphoreAcquire(&reset_signalHandle, osWaitForever);
+	xSemaphoreTake(reset_signalHandle, portMAX_DELAY);
 }
-extern osSemaphoreId_t game_end_animHandle;
-extern osSemaphoreId_t valid_animHandle;
+extern SemaphoreHandle_t game_end_animHandle;
+extern SemaphoreHandle_t valid_animHandle;
 //Send display matrix to display output.
 static void SetLedMatrix(void) {
 	for (uint8_t row = 0; row < DISPLAY_ROWS; row++) {
@@ -129,11 +139,11 @@ void validation_anim_handler(void* callback_param) {
 		SetMatrixTokenColor(&matrix[row][col], valid_infos->color);
 		SetLedMatrix();
 		coords_table_row_index += 2;
-		valid_infos->timer.timer_force = FORCE_ON;
+
 	} else {
-		valid_infos->timer.timer_force = FORCE_OFF;
+		valid_move.timer_force = FORCE_OFF;
 		coords_table_row_index = 2;
-		osSemaphoreRelease(&valid_animHandle);
+		xSemaphoreGive(valid_animHandle);
 	}
 }
 
@@ -141,11 +151,14 @@ void validation_anim_handler(void* callback_param) {
 static void gp4_move_down_animation(Msg_t* tmp_message_display) {
 	valid_struct valid_infos;
 	int8_t validation_table[15];
-	new_timer_init(&valid_infos.timer, 200, &valid_infos);
-	valid_infos.timer.Timer_Callback = validation_anim_handler;
+	valid_move.Timer_Callback = validation_anim_handler;
+	valid_move.callback_param = &valid_infos;
+	valid_infos.timer = valid_move;
+//	valid_infos.timer.callback_param = &valid_infos;
+//	valid_infos.timer.Timer_Callback = validation_anim_handler;
 	valid_infos.coords_table = validation_table;
 	valid_infos.color = tmp_message_display->move_coordinates.player_color;
-	debug_printf(2, "Validation du jeton.\n");
+	//debug_printf(2, "Validation du jeton.\n");
 	uint8_t col = tmp_message_display->move_coordinates.end.c;
 	uint8_t validation_table_index = 0;
 	for (uint8_t row = 0; row <= tmp_message_display->move_coordinates.end.l;
@@ -155,8 +168,9 @@ static void gp4_move_down_animation(Msg_t* tmp_message_display) {
 		validation_table_index += 2;
 	}
 	validation_table[validation_table_index] = BLINK_TABLE_STOP_INT;
-	start_new_timer(&valid_infos.timer);
-	osSemaphoreAcquire(&valid_animHandle, osWaitForever);
+	start_new_timer(&valid_infos.timer, 1);
+	//osDelay(3000);
+	xSemaphoreTake(valid_animHandle, portMAX_DELAY);
 	stop_new_timer(&valid_infos.timer);
 }
 
@@ -246,7 +260,9 @@ static void blink_on(void* blink_infos_ptr) {
 		} else {
 			blink_infos->timer.timer_signal = STOP_TIMER;
 			blink_infos->timer.timer_force = FORCE_OFF;
-			osSemaphoreRelease(&game_end_animHandle);
+			if (blink_infos->blink_type == VICTORY){
+				xSemaphoreGive(game_end_animHandle);
+			}
 		}
 	}
 }
@@ -276,7 +292,6 @@ static void blink_off(void* blink_infos_ptr) {
 		} else {
 			blink_infos->timer.timer_signal = STOP_TIMER;
 			blink_infos->timer.timer_force = FORCE_OFF;
-			osSemaphoreRelease(&game_end_animHandle);
 		}
 	}
 }
@@ -286,11 +301,13 @@ static void gp4_line_victory_animation(Msg_t* tmp_message) {
 	int8_t blink_table[VICTORY_BLINK_TABLE_SIZE];
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 15;
+	blink_infos.blink_count = 5;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
-	new_timer_init(&blink_infos.timer, 200, &blink_infos);
-	blink_infos.timer.Timer_Callback = blink_on;
+	blink_infos.blink_type = VICTORY;
+	victory_blink.callback_param = &blink_infos;
+	victory_blink.Timer_Callback = blink_callback;
+	blink_infos.timer = victory_blink;
 	for (uint8_t col = tmp_message->move_coordinates.beg.c;
 			col <= tmp_message->move_coordinates.end.c; col++) {
 
@@ -299,8 +316,9 @@ static void gp4_line_victory_animation(Msg_t* tmp_message) {
 		blink_table_index += 2;
 	}
 	blink_table[blink_table_index] = BLINK_TABLE_STOP_INT;
-	start_new_timer(&blink_infos.timer);
-	osSemaphoreAcquire(&game_end_animHandle, osWaitForever);
+	start_new_timer(&blink_infos.timer, 1);
+	xSemaphoreTake(game_end_animHandle, portMAX_DELAY);
+	stop_new_timer(&blink_infos.timer);
 }
 
 static void gp4_column_victory_animation(Msg_t* tmp_message) {
@@ -308,11 +326,13 @@ static void gp4_column_victory_animation(Msg_t* tmp_message) {
 	int8_t blink_table[VICTORY_BLINK_TABLE_SIZE];
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 15;
+	blink_infos.blink_count = 5;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
-	new_timer_init(&blink_infos.timer, 200, &blink_infos);
-	blink_infos.timer.Timer_Callback = blink_on;
+	blink_infos.blink_type = VICTORY;
+	victory_blink.callback_param = &blink_infos;
+	victory_blink.Timer_Callback = blink_callback;
+	blink_infos.timer = victory_blink;
 	for (uint8_t row = (tmp_message->move_coordinates.beg.l + TOP_ROW_OFFSET);
 			row <= (tmp_message->move_coordinates.end.l + TOP_ROW_OFFSET);
 			row++) {
@@ -322,8 +342,9 @@ static void gp4_column_victory_animation(Msg_t* tmp_message) {
 		blink_table_index += 2;
 	}
 	blink_table[blink_table_index] = BLINK_TABLE_STOP_INT;
-	start_new_timer(&blink_infos.timer);
-	osSemaphoreAcquire(&game_end_animHandle, osWaitForever);
+	start_new_timer(&blink_infos.timer, 1);
+	xSemaphoreTake(game_end_animHandle, portMAX_DELAY);
+	stop_new_timer(&blink_infos.timer);
 }
 
 static void gp4_right_diag_victory_animation(Msg_t* tmp_message) {
@@ -333,11 +354,13 @@ static void gp4_right_diag_victory_animation(Msg_t* tmp_message) {
 	int8_t blink_table[VICTORY_BLINK_TABLE_SIZE];
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 15;
+	blink_infos.blink_count = 5;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
-	new_timer_init(&blink_infos.timer, 200, &blink_infos);
-	blink_infos.timer.Timer_Callback = blink_on;
+	blink_infos.blink_type = VICTORY;
+	victory_blink.callback_param = &blink_infos;
+	victory_blink.Timer_Callback = blink_callback;
+	blink_infos.timer = victory_blink;
 	for (uint8_t tokens = 0; tokens < 4; tokens++) {
 
 		blink_table[blink_table_index] = win_row;
@@ -346,8 +369,9 @@ static void gp4_right_diag_victory_animation(Msg_t* tmp_message) {
 		win_row++, win_col++;
 	}
 	blink_table[blink_table_index] = BLINK_TABLE_STOP_INT;
-	start_new_timer(&blink_infos.timer);
-	osSemaphoreAcquire(&game_end_animHandle, osWaitForever);
+	start_new_timer(&blink_infos.timer, 1);
+	xSemaphoreTake(game_end_animHandle, portMAX_DELAY);
+	stop_new_timer(&blink_infos.timer);
 }
 
 static void gp4_left_diag_victory_animation(Msg_t* tmp_message) {
@@ -357,11 +381,13 @@ static void gp4_left_diag_victory_animation(Msg_t* tmp_message) {
 	win_col = tmp_message->move_coordinates.beg.c;
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 15;
+	blink_infos.blink_count = 5;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
-	new_timer_init(&blink_infos.timer, 200, &blink_infos);
-	blink_infos.timer.Timer_Callback = blink_on;
+	blink_infos.blink_type = VICTORY;
+	victory_blink.callback_param = &blink_infos;
+	victory_blink.Timer_Callback = blink_callback;
+	blink_infos.timer = victory_blink;
 	for (uint8_t tokens = 0; tokens < 4; tokens++) {
 
 		blink_table[blink_table_index] = win_row;
@@ -370,8 +396,9 @@ static void gp4_left_diag_victory_animation(Msg_t* tmp_message) {
 		win_row--, win_col++;
 	}
 	blink_table[blink_table_index] = BLINK_TABLE_STOP_INT;
-	start_new_timer(&blink_infos.timer);
-	osSemaphoreAcquire(&game_end_animHandle, osWaitForever);
+	start_new_timer(&blink_infos.timer, 1);
+	xSemaphoreTake(game_end_animHandle, portMAX_DELAY);
+	stop_new_timer(&blink_infos.timer);
 }
 
 static void victory_W(int color) {
@@ -511,8 +538,8 @@ static void display_message_init(Msg_t* message) {
 	message->move_coordinates.end.c = PLAY_TOKEN_STARTING_COL;
 }
 
-static void display_init(Msg_t* message) {
-	display_message_init(&(*message));
+static void display_init() {
+
 	for (uint8_t row = 0; row < DISPLAY_ROWS; row++) {
 		for (uint8_t col = 0; col < DISPLAY_COLS; col++) {
 			SetMatrixTokenColor(&matrix[row][col], BACKGROUND_COLOR);
@@ -575,7 +602,7 @@ void connect_4_message_processing(Msg_t* tmp_message_display,
 	} else if (tmp_message_display->status == GAME_END) {
 		game_end_message_processing(tmp_message_display);
 		*display_restart = 1;
-		osSemaphoreRelease(&reset_signalHandle);
+		xSemaphoreGive(reset_signalHandle);
 	}
 }
 
@@ -590,23 +617,29 @@ void *thread_handler_display(void* args) {
 	blink_struct blink_infos;
 	blink_infos.blink_count = -1;
 	blink_infos.color = COLOR_P_1;
+	blink_infos.blink_type = PLAY_TOKEN;
 	blink_infos.coords_table = blink_table;
-//	new_timer_init(&blink_infos.timer, 200, &blink_infos);
-	blink_infos.timer.Timer_Callback = blink_callback;
+	play_token_blink.callback_param = &blink_infos;
+	play_token_blink.Timer_Callback = blink_callback;
+	blink_infos.timer = play_token_blink;
+	//blink_infos.timer.Timer_Callback = blink_callback;
+	//blink_infos.timer.callback_param = &blink_infos;
 	int wait_anim_colors[WAIT_ANIM_COLORS_NUMBER] = { WAIT_COLOR_1,
 	WAIT_COLOR_2, WAIT_COLOR_3 };
-	new_timer_init(&blink_infos.timer, 500, &blink_infos);
+
 	while (1) {
 		display_restart = 0;
-		display_init(&tmp_message_display);
-		if ( osMessageQueueGet(display_queueHandle, &tmp_message_display, 0U, 0U) == osOK ) {
+		display_message_init(&tmp_message_display);
+		if (osMessageQueueGet(display_queueHandle, &tmp_message_display, 0U, 0U)
+				== osOK) {
+			display_init();
 			countdown();
 			tmp_message_display.move_coordinates.player = 1;
 			tmp_message_display.move_coordinates.player_color =
 			COLOR_P_1;
 			tmp_message_display.move_coordinates.end.c =
 			PLAY_TOKEN_STARTING_COL;
-			osSemaphoreRelease(&start_signalHandle);
+			xSemaphoreGive(start_signalHandle);
 			while (display_restart == 0) {
 				//Wait message from writing queue.
 				blink_table[0] = 0;
@@ -615,20 +648,21 @@ void *thread_handler_display(void* args) {
 				blink_infos.coords_table = blink_table;
 				blink_infos.color =
 						tmp_message_display.move_coordinates.player_color;
-				start_new_timer(&blink_infos.timer);
-				if (osMessageQueueGet(display_queueHandle, &tmp_message_display, 0U, osWaitForever) == osOK) {
+				start_new_timer(&blink_infos.timer, 1);
+				if (osMessageQueueGet(display_queueHandle, &tmp_message_display,
+						0U, osWaitForever) == osOK) {
 					stop_new_timer(&blink_infos.timer);
-					debug_printf(2,
-							"Write handler received: %d %d %d %d %d %d %d %d %d %d\n",
-							tmp_message_display.mode, tmp_message_display.type,
-							tmp_message_display.status,
-							tmp_message_display.move_command,
-							tmp_message_display.victory_type,
-							tmp_message_display.move_coordinates.player_color,
-							tmp_message_display.move_coordinates.beg.l,
-							tmp_message_display.move_coordinates.beg.c,
-							tmp_message_display.move_coordinates.end.l,
-							tmp_message_display.move_coordinates.end.c);
+//					debug_printf(2,
+//							"Write handler received: %d %d %d %d %d %d %d %d %d %d\n",
+//							tmp_message_display.mode, tmp_message_display.type,
+//							tmp_message_display.status,
+//							tmp_message_display.move_command,
+//							tmp_message_display.victory_type,
+//							tmp_message_display.move_coordinates.player_color,
+//							tmp_message_display.move_coordinates.beg.l,
+//							tmp_message_display.move_coordinates.beg.c,
+//							tmp_message_display.move_coordinates.end.l,
+//							tmp_message_display.move_coordinates.end.c);
 					if (tmp_message_display.mode == CONNECT_4) {
 						connect_4_message_processing(&tmp_message_display,
 								&blink_infos, &display_restart,
@@ -637,6 +671,7 @@ void *thread_handler_display(void* args) {
 				}
 			}
 		} else {
+			// Idle Animations :
 			wait_animation(wait_anim_colors[wait_color_index]);
 			reset_matrix_animation();
 			wait_color_index += 1;

@@ -10,7 +10,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 
-#include"debug.h"
+
 #include"leds_control.h"
 #include"queue.h"
 #include"game_p4.h"
@@ -21,6 +21,8 @@
 
 static uint8_t pad_activation_status = PADS_DEACTIVATED;
 extern osMessageQueueId_t app_queueHandle;
+extern timer_struct_t short_timer;
+extern timer_struct_t long_timer;
 
 void TimeOutAutoplay(void* actual_player_pad) {
 	uint8_t* tmp_pad = (uint8_t*) actual_player_pad;
@@ -49,16 +51,14 @@ void *thread_handler_app(void* args) {
 	Msg_t tmp_message;
 	Msg_t tmp_command;
 	uint8_t actual_player_pad;
-	timer_struct_t short_timer;
-	timer_struct_t long_timer;
-	new_timer_init(&short_timer, SHORT_TIMER_SETTING, &actual_player_pad);
-	new_timer_init(&long_timer, LONG_TIMER_SETTING, &actual_player_pad);
 	if (registerCallback(SendInputToApp) != 0) {
-		error_printf("Input callback register failed.");
+		//error_printf("Input callback register failed.");
 		exit(EXIT_FAILURE);
 	}
 	short_timer.Timer_Callback = TimeOutAutoplay;
+	short_timer.callback_param = &actual_player_pad;
 	long_timer.Timer_Callback = TimeOutAutoplay;
+	long_timer.callback_param = &actual_player_pad;
 	while (1) {
 		gp4_init();
 		gp4_initialize_victory_struct(&victory_infos);
@@ -67,18 +67,18 @@ void *thread_handler_app(void* args) {
 		gp4_initialize_message_struct(&tmp_message);
 		actual_player_pad = NO_PLAYER_PAD;
 		//Console Display
-		gp4_display();
+		//gp4_display();
 		while (1) {
 			pad_activation_status = PADS_ACTIVATED;
-			debug_printf(2, "Actual player pad : %d\n", actual_player_pad);
+			//debug_printf(2, "Actual player pad : %d\n", actual_player_pad);
 			if (actual_player_pad != 0) {
-				start_new_timer(&short_timer);
-				start_new_timer(&long_timer);
+				start_new_timer(&short_timer, 0);
+				start_new_timer(&long_timer, 0);
 			}
 			//Wait message from reading queue.
 			osMessageQueueGet(app_queueHandle, &tmp_command, 0U, osWaitForever);
-			debug_printf(2, "App handler received: %d %d\n", tmp_command.pad,
-					tmp_command.move_command);
+			//debug_printf(2, "App handler received: %d %d\n", tmp_command.pad,
+			//		tmp_command.move_command);
 			pad_activation_status = PADS_DEACTIVATED;
 			// Game start player pad attribution.
 			if (actual_player_pad == 0) {
@@ -89,7 +89,7 @@ void *thread_handler_app(void* args) {
 				}
 				tmp_message.mode = COUNTDOWN;
 				SendToDisplay(&tmp_message, sizeof(tmp_message));
-				//wait_for_display_init();
+				wait_for_display_init();
 				continue;
 			}
 			//Process message from reading queue.
@@ -110,7 +110,7 @@ void *thread_handler_app(void* args) {
 				tmp_message.move_command = DOWN_COMMAND;
 				stop_new_timer(&short_timer);
 				stop_new_timer(&long_timer);
-				gp4_display();
+				//gp4_display();
 				SendToDisplay(&tmp_message, sizeof(tmp_message));
 				victory_infos = gp4_check_winner();
 				if (victory_infos.game_end != LIVE) {
@@ -127,7 +127,7 @@ void *thread_handler_app(void* args) {
 				tmp_message.move_coordinates.end.l = move.end.l;
 				tmp_message.move_coordinates.end.c = move.end.c;
 				tmp_message.move_command = NEXT_PLAYER_COMMAND;
-				gp4_display();
+				//gp4_display();
 				SendToDisplay(&tmp_message, sizeof(tmp_message));
 				if (actual_player_pad == PLAYER_PAD_1)
 					actual_player_pad = PLAYER_PAD_2;
@@ -149,7 +149,7 @@ void *thread_handler_app(void* args) {
 				tmp_message.move_coordinates.end.c = move.end.c;
 				tmp_message.move_command = LEFT_COMMAND;
 				stop_new_timer(&short_timer);
-				gp4_display();
+				//gp4_display();
 				SendToDisplay(&tmp_message, sizeof(tmp_message));
 				continue;
 				//If RIGHT button is pushed.
@@ -167,36 +167,36 @@ void *thread_handler_app(void* args) {
 				tmp_message.move_coordinates.end.c = move.end.c;
 				tmp_message.move_command = RIGHT_COMMAND;
 				stop_new_timer(&short_timer);
-				gp4_display();
+				//gp4_display();
 				SendToDisplay(&tmp_message, sizeof(tmp_message));
 				continue;
 			}
 
 		}
-		gp4_display();
+		//gp4_display();
 		tmp_message.mode = CONNECT_4;
 		tmp_message.type = TDM_DISPLAY;
 		tmp_message.status = GAME_END;
 		//Victory processing
 		if (victory_infos.game_end == 1) {
-			debug_printf(1, "Game end : %d\nWinner: %d\nVictory Type : %d\n",
-					victory_infos.game_end, victory_infos.winner_player,
-					victory_infos.victory_type);
-			debug_printf(1,
-					"Coordonnées du jeton de victoire: Ligne %d Colonne %d\n",
-					victory_infos.victory_token_coord[0] + 1,
-					victory_infos.victory_token_coord[1] + 1);
-			debug_printf(1,
-					"Alignement victorieux:\nJeton 1: Ligne %d Colonne %d\nJeton 2: Ligne %d Colonne %d\nJeton 3: Ligne" " %d Colonne %d\nJeton 4: Ligne %d Colonne %d\n",
-					victory_infos.victory_line_tokens_coord[0][0] + 1,
-					victory_infos.victory_line_tokens_coord[0][1] + 1,
-					victory_infos.victory_line_tokens_coord[1][0] + 1,
-					victory_infos.victory_line_tokens_coord[1][1] + 1,
-					victory_infos.victory_line_tokens_coord[2][0] + 1,
-					victory_infos.victory_line_tokens_coord[2][1] + 1,
-					victory_infos.victory_line_tokens_coord[3][0] + 1,
-					victory_infos.victory_line_tokens_coord[3][1] + 1);
-			debug_printf(1, "\n");
+			//debug_printf(1, "Game end : %d\nWinner: %d\nVictory Type : %d\n",
+			//		victory_infos.game_end, victory_infos.winner_player,
+			//		victory_infos.victory_type);
+			//debug_printf(1,
+			//		"Coordonnées du jeton de victoire: Ligne %d Colonne %d\n",
+			//		victory_infos.victory_token_coord[0] + 1,
+			//		victory_infos.victory_token_coord[1] + 1);
+			//debug_printf(1,
+			//		"Alignement victorieux:\nJeton 1: Ligne %d Colonne %d\nJeton 2: Ligne %d Colonne %d\nJeton 3: Ligne" " %d Colonne %d\nJeton 4: Ligne %d Colonne %d\n",
+					//		victory_infos.victory_line_tokens_coord[0][0] + 1,
+			//		victory_infos.victory_line_tokens_coord[0][1] + 1,
+			//		victory_infos.victory_line_tokens_coord[1][0] + 1,
+			//		victory_infos.victory_line_tokens_coord[1][1] + 1,
+			//		victory_infos.victory_line_tokens_coord[2][0] + 1,
+			//		victory_infos.victory_line_tokens_coord[2][1] + 1,
+			//		victory_infos.victory_line_tokens_coord[3][0] + 1,
+					//		victory_infos.victory_line_tokens_coord[3][1] + 1);
+			//debug_printf(1, "\n");
 			//Victory Blink coordinates processing.
 			if (victory_infos.victory_type == HORIZONTAL) {
 				tmp_message.victory_type = LINE_VICTORY;
@@ -218,7 +218,7 @@ void *thread_handler_app(void* args) {
 					victory_infos.victory_line_tokens_coord[3][1];
 			SendToDisplay(&tmp_message, sizeof(tmp_message));
 		} else if (victory_infos.game_end == DRAW) {
-			debug_printf(1, "Draw. Game Over.\n");
+			//debug_printf(1, "Draw. Game Over.\n");
 			tmp_message.victory_type = DRAW_END;
 			SendToDisplay(&tmp_message, sizeof(tmp_message));
 		}
