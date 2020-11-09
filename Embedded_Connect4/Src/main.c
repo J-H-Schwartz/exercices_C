@@ -117,24 +117,16 @@ const osMessageQueueAttr_t readFromSerial_attributes = {
 };
 /* Definitions for start_signal */
 SemaphoreHandle_t start_signalHandle;
-//const osSemaphoreAttr_t start_signal_attributes = {
-//  .name = "start_signal"
-//};
+
 /* Definitions for reset_signal */
 SemaphoreHandle_t reset_signalHandle;
-//const osSemaphoreAttr_t reset_signal_attributes = {
-//  .name = "reset_signal"
-//};
+
 /* Definitions for game_end_anim */
 SemaphoreHandle_t game_end_animHandle;
-//const osSemaphoreAttr_t game_end_anim_attributes = {
-//  .name = "game_end_anim"
-//};
+
 /* Definitions for valid_anim */
 SemaphoreHandle_t valid_animHandle;
-//const osSemaphoreAttr_t valid_anim_attributes = {
-//  .name = "valid_anim"
-//};
+
 /* USER CODE BEGIN PV */
 osMutexId_t timer_mutexHandle;
 const osMutexAttr_t timer_mutex_attributes = {
@@ -212,7 +204,6 @@ int main(void)
   game_end_animHandle = xSemaphoreCreateBinary();
 
   /* creation of valid_anim */
-  //valid_animHandle = osSemaphoreNew(1, 0, &valid_anim_attributes);
   valid_animHandle = xSemaphoreCreateBinary();
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -231,26 +222,26 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  sendToSerialHandle = osMessageQueueNew (16, 10, &sendToSerial_attributes);
+  sendToSerialHandle = osMessageQueueNew (16, SIZE_OF_LED_COMMAND_BUFFER, &sendToSerial_attributes);
 
   /* creation of display_queue */
-  readFromSerialHandle = osMessageQueueNew (16, 5, &readFromSerial_attributes);
+  readFromSerialHandle = osMessageQueueNew (16, SIZE_OF_PLAYER_COMMAND_BUFFER, &readFromSerial_attributes);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation de serialTask */
   serialTaskHandle = osThreadNew((void*)sendToSerialTask, NULL, &serialTask_attributes);
+
   /* creation of task_read */
   task_readHandle = osThreadNew((void*)thread_handler_input, NULL, &task_read_attributes);
-//
-//  /* creation of task_app */
+
+  /* creation of task_app */
   task_appHandle = osThreadNew((void*)thread_handler_app, NULL, &task_app_attributes);
-//
-//  /* creation of task_display */
+
+  /* creation of task_display */
   task_displayHandle = osThreadNew((void*)thread_handler_display, NULL, &task_display_attributes);
-//
-//  /* creation of task_timer */
+
+  /* creation of task_timer */
   task_timerHandle = osThreadNew((void*)timer_handler, NULL, &task_timer_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -478,24 +469,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */ 
-}
 
  /**
   * @brief  Period elapsed callback in non blocking mode

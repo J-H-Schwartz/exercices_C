@@ -14,8 +14,8 @@
 #include"leds_control.h"
 #include"read_thread.h"
 #include"game_p4.h"
-
 #include "main.h"
+
 extern UART_HandleTypeDef huart3;
 
 typedef void (*callback_t)(void*);
@@ -32,18 +32,10 @@ int registerCallback(callback_t c) {
 void *thread_handler_input(void* args) {
 
 	char button_read[READ_BUTTON_BUFFER_SIZE];
-	uint8_t error = 0;
 	uint8_t command[2];
 	while (1) {
 		//Get input.
-		error = readbutton(button_read, (READ_BUTTON_BUFFER_SIZE + 1));
-		if (error != 0)
-			////debug_printf(2, "Button error : %d\n", error);
-		//Debug input print.
-		if (button_read[3] == DOWN_PAD) {
-			////debug_printf(2, "Button press read: %d %d %d %d\n", button_read[0],
-			//		button_read[1], button_read[2], button_read[3]);
-		}
+		readbutton(button_read, (READ_BUTTON_BUFFER_SIZE + 1));
 		//Process input.
 		if (button_read[3] == DOWN_PAD && button_read[2] == UP_PAD) {
 			command[0] = UP_COMMAND;
@@ -74,7 +66,7 @@ void *thread_handler_input(void* args) {
 				command[1] = PAD_2;
 			}
 		} else {
-			osDelay(100);
+			osDelay(10);
 			continue;
 		}
 		//Send processed command to read queue.

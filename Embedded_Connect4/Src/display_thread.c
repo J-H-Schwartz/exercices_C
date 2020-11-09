@@ -17,6 +17,7 @@
 #include"numbers_module.h"
 #include"timer_threads.h"
 
+#define VICTORY_BLINK_COUNT 5
 typedef enum {
 	PLAY_TOKEN, VICTORY,
 } blink_type;
@@ -154,11 +155,8 @@ static void gp4_move_down_animation(Msg_t* tmp_message_display) {
 	valid_move.Timer_Callback = validation_anim_handler;
 	valid_move.callback_param = &valid_infos;
 	valid_infos.timer = valid_move;
-//	valid_infos.timer.callback_param = &valid_infos;
-//	valid_infos.timer.Timer_Callback = validation_anim_handler;
 	valid_infos.coords_table = validation_table;
 	valid_infos.color = tmp_message_display->move_coordinates.player_color;
-	//debug_printf(2, "Validation du jeton.\n");
 	uint8_t col = tmp_message_display->move_coordinates.end.c;
 	uint8_t validation_table_index = 0;
 	for (uint8_t row = 0; row <= tmp_message_display->move_coordinates.end.l;
@@ -169,7 +167,6 @@ static void gp4_move_down_animation(Msg_t* tmp_message_display) {
 	}
 	validation_table[validation_table_index] = BLINK_TABLE_STOP_INT;
 	start_new_timer(&valid_infos.timer, 1);
-	//osDelay(3000);
 	xSemaphoreTake(valid_animHandle, portMAX_DELAY);
 	stop_new_timer(&valid_infos.timer);
 }
@@ -211,18 +208,11 @@ static void blink_animation(int8_t coords_table[], int color, int blink_delay,
 	}
 }
 
+// Play token and victory blink animations callback.
+
 static void blink_on(void* blink_infos_ptr);
 static void blink_off(void* blink_infos_ptr);
 
-//static void blink_struct_init(blink_struct* struct_to_init,
-//		int8_t* coords_table, int color, int8_t count) {
-//	struct_to_init->blink_count = count;
-//	struct_to_init->color = color;
-//	struct_to_init->coords_table = coords_table;
-//	timer_init(&struct_to_init->timer, 5, &struct_to_init);
-//	struct_to_init->timer.Timer_Callback = blink_on;
-//}
-// EN TRAVAUX, BLINK VIA TIMER
 void blink_callback(void* blink_infos_ptr) {
 	blink_struct* blink_infos = (blink_struct*) blink_infos_ptr;
 	if (blink_infos->blink_status == 0) {
@@ -301,7 +291,7 @@ static void gp4_line_victory_animation(Msg_t* tmp_message) {
 	int8_t blink_table[VICTORY_BLINK_TABLE_SIZE];
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 5;
+	blink_infos.blink_count = VICTORY_BLINK_COUNT;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
 	blink_infos.blink_type = VICTORY;
@@ -326,7 +316,7 @@ static void gp4_column_victory_animation(Msg_t* tmp_message) {
 	int8_t blink_table[VICTORY_BLINK_TABLE_SIZE];
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 5;
+	blink_infos.blink_count = VICTORY_BLINK_COUNT;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
 	blink_infos.blink_type = VICTORY;
@@ -354,7 +344,7 @@ static void gp4_right_diag_victory_animation(Msg_t* tmp_message) {
 	int8_t blink_table[VICTORY_BLINK_TABLE_SIZE];
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 5;
+	blink_infos.blink_count = VICTORY_BLINK_COUNT;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
 	blink_infos.blink_type = VICTORY;
@@ -381,7 +371,7 @@ static void gp4_left_diag_victory_animation(Msg_t* tmp_message) {
 	win_col = tmp_message->move_coordinates.beg.c;
 	uint8_t blink_table_index = 0;
 	blink_struct blink_infos;
-	blink_infos.blink_count = 5;
+	blink_infos.blink_count = VICTORY_BLINK_COUNT;
 	blink_infos.color = tmp_message->move_coordinates.player_color;
 	blink_infos.coords_table = blink_table;
 	blink_infos.blink_type = VICTORY;
@@ -614,6 +604,7 @@ void *thread_handler_display(void* args) {
 	uint8_t play_token_refresh_security = 1;
 	uint8_t display_restart;
 	uint8_t wait_color_index = 0;
+
 	blink_struct blink_infos;
 	blink_infos.blink_count = -1;
 	blink_infos.color = COLOR_P_1;
@@ -622,14 +613,14 @@ void *thread_handler_display(void* args) {
 	play_token_blink.callback_param = &blink_infos;
 	play_token_blink.Timer_Callback = blink_callback;
 	blink_infos.timer = play_token_blink;
-	//blink_infos.timer.Timer_Callback = blink_callback;
-	//blink_infos.timer.callback_param = &blink_infos;
+
 	int wait_anim_colors[WAIT_ANIM_COLORS_NUMBER] = { WAIT_COLOR_1,
 	WAIT_COLOR_2, WAIT_COLOR_3 };
 
 	while (1) {
 		display_restart = 0;
 		display_message_init(&tmp_message_display);
+		// Wait for first message, stopping idle anim and initializing game
 		if (osMessageQueueGet(display_queueHandle, &tmp_message_display, 0U, 0U)
 				== osOK) {
 			display_init();
@@ -641,7 +632,6 @@ void *thread_handler_display(void* args) {
 			PLAY_TOKEN_STARTING_COL;
 			xSemaphoreGive(start_signalHandle);
 			while (display_restart == 0) {
-				//Wait message from writing queue.
 				blink_table[0] = 0;
 				blink_table[1] = tmp_message_display.move_coordinates.end.c;
 				blink_table[2] = BLINK_TABLE_STOP_INT;
@@ -649,20 +639,10 @@ void *thread_handler_display(void* args) {
 				blink_infos.color =
 						tmp_message_display.move_coordinates.player_color;
 				start_new_timer(&blink_infos.timer, 1);
+				//Wait message from writing queue.
 				if (osMessageQueueGet(display_queueHandle, &tmp_message_display,
 						0U, osWaitForever) == osOK) {
 					stop_new_timer(&blink_infos.timer);
-//					debug_printf(2,
-//							"Write handler received: %d %d %d %d %d %d %d %d %d %d\n",
-//							tmp_message_display.mode, tmp_message_display.type,
-//							tmp_message_display.status,
-//							tmp_message_display.move_command,
-//							tmp_message_display.victory_type,
-//							tmp_message_display.move_coordinates.player_color,
-//							tmp_message_display.move_coordinates.beg.l,
-//							tmp_message_display.move_coordinates.beg.c,
-//							tmp_message_display.move_coordinates.end.l,
-//							tmp_message_display.move_coordinates.end.c);
 					if (tmp_message_display.mode == CONNECT_4) {
 						connect_4_message_processing(&tmp_message_display,
 								&blink_infos, &display_restart,

@@ -344,7 +344,7 @@ static void MX_GPIO_Init(void) {
 
 static void EXTI15_10_IRQHandler_Config(void) {
 	/* Enable and set EXTI lines 10 to 15 Interrupt to the lowest priority */
-	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 7, 0);
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 1, 1);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
