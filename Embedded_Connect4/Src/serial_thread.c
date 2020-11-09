@@ -14,7 +14,7 @@
 extern osMessageQueueId_t sendToSerialHandle;
 extern osMessageQueueId_t readFromSerialHandle;
 
-extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart7;
 
 void sendToSerial(char* msg) {
 	osMessageQueuePut(sendToSerialHandle, msg, 10U, osWaitForever);
@@ -29,12 +29,12 @@ void* sendToSerialTask(void *argument) {
 	for(;;){
 		unsigned char msgRead[5];
 		unsigned char msgSend[10];
-		if (HAL_UART_Receive(&huart3, msgRead, SIZE_OF_PLAYER_COMMAND_BUFFER, 10) == HAL_OK){
+		if (HAL_UART_Receive(&huart7, msgRead, SIZE_OF_PLAYER_COMMAND_BUFFER, 10) == HAL_OK){
 			osMessageQueuePut(readFromSerialHandle, msgRead, 10U, 100);
 		}
 		if (osMessageQueueGetCount(sendToSerialHandle) > 0){
 			osMessageQueueGet(sendToSerialHandle, msgSend, NULL, 10);
-			HAL_UART_Transmit(&huart3, msgSend, SIZE_OF_LED_COMMAND_BUFFER, 100);
+			HAL_UART_Transmit(&huart7, msgSend, SIZE_OF_LED_COMMAND_BUFFER, 100);
 		}
 	}
 

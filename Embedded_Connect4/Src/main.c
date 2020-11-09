@@ -57,6 +57,7 @@
 ETH_HandleTypeDef heth;
 
 UART_HandleTypeDef huart3;
+UART_HandleTypeDef huart7;
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
@@ -139,6 +140,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ETH_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_UART7_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 void StartDefaultTask(void *argument);
 
@@ -181,6 +183,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ETH_Init();
   MX_USART3_UART_Init();
+  MX_UART7_Init();
   MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
 
@@ -430,6 +433,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -490,6 +494,41 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   /* USER CODE END Callback 1 */
 }
+
+/**
+* @brief UART7 Initialization Function^M
+* @param None^M
+* @retval None^M
+*/
+static void MX_UART7_Init(void)
+{
+
+/* USER CODE BEGIN UART7_Init 0 */
+
+/* USER CODE END UART7_Init 0 */
+
+/* USER CODE BEGIN UART7_Init 1 */
+
+/* USER CODE END UART7_Init 1 */
+	huart7.Instance = UART7;
+	huart7.Init.BaudRate = 115200;
+	huart7.Init.WordLength = UART_WORDLENGTH_8B;
+	huart7.Init.StopBits = UART_STOPBITS_1;
+	huart7.Init.Parity = UART_PARITY_NONE;
+	huart7.Init.Mode = UART_MODE_TX_RX;
+	huart7.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart7.Init.OverSampling = UART_OVERSAMPLING_16;
+	if (HAL_UART_Init(&huart7) != HAL_OK)
+	{
+		Error_Handler();
+	}
+/* USER CODE BEGIN UART7_Init 2 */
+
+/* USER CODE END UART7_Init 2 */
+
+}
+
+
 
 /**
   * @brief  This function is executed in case of error occurrence.
